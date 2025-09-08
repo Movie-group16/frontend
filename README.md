@@ -15,3 +15,8 @@ https://app.moqups.com/4BhuJ2mZt1ZxPueVxVvlNbRswOrvnxma/view/page/ad64222d5
 
 link to the moqups:
 https://app.moqups.com/4BhuJ2mZt1ZxPueVxVvlNbRswOrvnxma/view/page/aa7535a62
+
+# Hourly accounting table
+
+link to the hourly accounting table:
+https://1drv.ms/x/c/584f09549647c758/EQL6rOSSIgZBtpWczWKfjNIBGkEoBC33DYXYRb8iXrzqdw?e=FMc4Cz
