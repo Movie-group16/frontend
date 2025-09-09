@@ -40,3 +40,33 @@
 .read-the-docs {
   color: #888;
 }
+
+.login-form {
+  max-width: 320px;
+  margin: 2em auto;
+  padding: 2em;
+  background: #222;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0003;
+  color: #fff;
+}
+.login-form h2 {
+  margin-bottom: 1em;
+}
+.login-form label {
+  display: block;
+  margin-bottom: 1em;
+}
+.login-form input {
+  width: 100%;
+  padding: 0.5em;
+  margin-top: 0.5em;
+  border-radius: 4px;
+  border: 1px solid #888;
+  background: #333;
+  color: #fff;
+}
+.login-form button {
+  width: 100%;
+  margin-top: 1em;
+}
