@@ -16,7 +16,7 @@ function Login({ setToken }: LoginProps) {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await axios.post('http://localhost:5000/login', { // Lisää tähän oikea osoite
+      const response = await axios.post('http://localhost:3001/user/login', {
         user: { email, password }
     })
 
