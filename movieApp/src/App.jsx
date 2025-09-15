@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import './App.css'
 import Login from './components/Login/login.jsx'
 import MoviesPage from './components/MoviesPage/moviesPage.jsx'
@@ -13,9 +13,10 @@ import FavouritesPage from './components/FavouritesPage/favouritesPage.jsx'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "")
+  const location = useLocation()
 
   return (
-    <BrowserRouter>
+    <>
       <Header token={token} setToken={setToken} />
       <Routes>
         <Route path="/" element={<MoviesPage />} />
@@ -26,8 +27,8 @@ function App() {
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/favourites" element={<FavouritesPage />} />
       </Routes>
-      <BottomPanel />
-    </BrowserRouter>
+      {location.pathname !== '/login' && <BottomPanel />}
+    </>
   )
 }
 
