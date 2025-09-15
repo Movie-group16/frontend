@@ -10,6 +10,7 @@ import ProfilePage from './components/ProfilePage/profilePage.jsx'
 import GroupsPage from './components/GroupsPage/groupsPage.jsx'
 import FriendsPage from './components/FriendsPage/friendsPage.jsx'
 import FavouritesPage from './components/FavouritesPage/favouritesPage.jsx'
+import RegistrationPage from './components/RegistrationPage/registrationPage.jsx'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "")
@@ -21,13 +22,14 @@ function App() {
       <Routes>
         <Route path="/" element={<MoviesPage />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="/register" element={<RegistrationPage />} />
         <Route path="/showtimes" element={<ShowtimesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/groups" element={<GroupsPage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/favourites" element={<FavouritesPage />} />
       </Routes>
-      {location.pathname !== '/login' && <BottomPanel />}
+      {location.pathname !== '/login' && location.pathname !== '/register' && <BottomPanel />}
     </>
   )
 }
