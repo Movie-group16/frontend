@@ -2,34 +2,31 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-interface LoginProps {
-  setToken: (token: string) => void
-}
-
-function Login({ setToken }: LoginProps) {
+function Login({ setToken }) {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     try {
       const response = await axios.post('http://localhost:3001/user/login', {
-        user: { email, password }
-    })
+        username,
+        email,
+        password,
+      })
 
     const token = response.data.token 
     localStorage.setItem('token', token)
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     setToken(token)
     navigate('/')
-  } catch (error: any) {
+  } catch (error) {
     alert(error.response?.data?.message || 'Login failed')
   }
 }
-
   return (
     <form onSubmit={handleLogin} className="login-form">
       <h2>Login</h2>

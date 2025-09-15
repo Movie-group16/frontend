@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import './App.css'
-import Login from './components/Login/login.tsx'
-import MainScreen from './components/MainScreen/mainScreen.tsx'
-import Header from './components/Header/header.tsx'
+import Login from './components/Login/login.jsx'
+import MainScreen from './components/MainScreen/mainScreen.jsx'
+import Header from './components/Header/header.jsx'
 import { useState } from 'react'
 
 function App() {
