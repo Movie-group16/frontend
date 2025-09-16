@@ -1,9 +1,16 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import './App.css'
-import Login from './components/Login/login.tsx'
-import MainScreen from './components/MainScreen/mainScreen.tsx'
-import Header from './components/Header/header.tsx'
+import Login from './components/Login/login.jsx'
+import MoviesPage from './components/MoviesPage/movieScreen.jsx'
+import Header from './components/Header/header.jsx'
+import BottomPanel from './components/BottomPanel/bottomPanel.jsx'
 import { useState } from 'react'
+import ShowtimesPage from './components/ShowtimesPage/showtimesPage.jsx'
+import ProfilePage from './components/ProfilePage/profilePage.jsx'
+import GroupsPage from './components/GroupsPage/groupsPage.jsx'
+import FriendsPage from './components/FriendsPage/friendsPage.jsx'
+import FavouritesPage from './components/FavouritesPage/favouritesPage.jsx'
+import RegistrationPage from './components/RegistrationPage/registrationPage.jsx'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "")
@@ -13,8 +20,14 @@ function App() {
     <>
       <Header token={token} setToken={setToken} />
       <Routes>
-        <Route path="/" element={<MainScreen />} />
-        <Route path="/login" element={<Login onLogin={() => {}} />} />
+        <Route path="/" element={<MoviesPage />} />
+        <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/showtimes" element={<ShowtimesPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/groups" element={<GroupsPage />} />
+        <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/favourites" element={<FavouritesPage />} />
       </Routes>
       {location.pathname !== '/login' && location.pathname !== '/register' && <BottomPanel />}
     </>
