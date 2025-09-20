@@ -16,9 +16,11 @@ function MoviesPage() {
   const [totalResults, setTotalResults] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
 
+  const movieSearchUrl = `https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&page=${currentPage > 0 ? currentPage : 1}`
+  const moviePopularUrl = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${currentPage > 0 ? currentPage : 1}`
   
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&page=${currentPage > 0 ? currentPage : 1}`,
+    fetch(currentSearchTerm !== '' ? movieSearchUrl : moviePopularUrl,
       {
         headers : {
           'Authorization': `Bearer ${movieDbApiKey}`,
