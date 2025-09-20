@@ -8,7 +8,7 @@ function Header({ token, setToken }) {
     localStorage.removeItem("token")
     delete axios.defaults.headers.common["Authorization"]
     setToken("")
-    navigate('/login')
+    navigate('/')
   }
 
   return (

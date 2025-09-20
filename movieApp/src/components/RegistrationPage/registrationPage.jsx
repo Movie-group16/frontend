@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 function RegistrationPage() {
   const [username, setUsername] = useState('')
@@ -10,8 +11,20 @@ function RegistrationPage() {
 
   const handleRegister = async (e) => {
     e.preventDefault()
-    setMessage('Registration not implemented yet.')
-    // Add backend registration logic here later
+    try {
+      const response = await axios.post('http://localhost:3001/user/register', {
+        user: {
+          username,
+          email,
+          password_hash: password,
+          user_desc: ''
+        }
+      })
+      setMessage('Registration successful!')
+      setTimeout(() => navigate('/login'), 1500)
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Registration failed')
+    }
   }
 
   return (
@@ -25,6 +38,7 @@ function RegistrationPage() {
             value={username}
             onChange={e => setUsername(e.target.value)}
             required
+            placeholder="Type username"
           />
         </label>
       </div>
@@ -36,6 +50,7 @@ function RegistrationPage() {
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
+            placeholder="Type email"
           />
         </label>
       </div>
@@ -47,29 +62,19 @@ function RegistrationPage() {
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
+            placeholder="Type password"
           />
         </label>
       </div>
       <button type="submit">Register</button>
       <button
         type="button"
-        style={{
-          width: '100%',
-          marginTop: '0.5em',
-          background: '#333',
-          color: '#fff',
-          borderRadius: '4px',
-          border: '1px solid #888',
-          padding: '0.6em 1.2em',
-          fontSize: '1em',
-          fontWeight: 500,
-          cursor: 'pointer'
-        }}
-        onClick={() => navigate(-1)}
+        className="back-btn"
+        onClick={() => navigate('/login')}
       >
         Back
       </button>
-      {message && <div style={{ color: '#ff8888', marginTop: '1em' }}>{message}</div>}
+      {message && <div className="error-message">{message}</div>}
     </form>
   )
 }
