@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import './App.css'
 import Login from './components/Login/login.jsx'
-import MoviesPage from './components/MoviesPage/movieScreen.jsx'
+import MoviesPage from './components/MoviesPage/moviesPage.jsx'
 import Header from './components/Header/header.jsx'
 import BottomPanel from './components/BottomPanel/bottomPanel.jsx'
 import { useState } from 'react'
