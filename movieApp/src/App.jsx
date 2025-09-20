@@ -29,7 +29,9 @@ function App() {
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/favourites" element={<FavouritesPage />} />
       </Routes>
-      {location.pathname !== '/login' && location.pathname !== '/register' && <BottomPanel />}
+      {location.pathname !== '/login' && location.pathname !== '/register' && (
+        <BottomPanel token={token} />
+      )}
     </>
   )
 }

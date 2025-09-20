@@ -10,13 +10,19 @@ const panelRoutes = [
   { label: 'Favourites', path: '/favourites' },
 ]
 
-function BottomPanel() {
+function BottomPanel({ token }) {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const visibleRoutes = token
+    ? panelRoutes
+    : panelRoutes.filter(route =>
+        route.label === 'Movies' || route.label === 'Showtimes'
+      )
+
   return (
     <div className="main-screen-panel">
-      {panelRoutes.map(route => (
+      {visibleRoutes.map(route => (
         <button
           key={route.path}
           className={`panel-btn${location.pathname === route.path ? ' active' : ''}`}

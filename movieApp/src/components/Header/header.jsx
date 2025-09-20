@@ -1,19 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-interface HeaderProps {
-  token: string
-  setToken: (token: string) => void
-}
-
-function Header({ token, setToken }: HeaderProps) {
+function Header({ token, setToken }) {
   const navigate = useNavigate()
 
   const handleLogout = () => {
     localStorage.removeItem("token")
     delete axios.defaults.headers.common["Authorization"]
     setToken("")
-    navigate('/login')
+    navigate('/')
   }
 
   return (
