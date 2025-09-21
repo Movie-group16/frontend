@@ -81,6 +81,18 @@ function MovieScreen() {
                   </a>
                 )}
               </div>
+
+              <div className="production-companies">
+                <p>Production Companies:</p>
+                <div className="production-companies-list">
+                  {movieDetails.production_companies && movieDetails.production_companies.map(company => (
+                    <div key={company.id} className="production-company">
+                      {company.logo_path ? <img className="company-logo" src={`https://image.tmdb.org/t/p/w200${company.logo_path}`} alt={company.name} /> : <div className="no-logo-available">{company.name}</div>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

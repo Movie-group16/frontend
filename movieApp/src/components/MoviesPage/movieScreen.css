@@ -4,15 +4,23 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    background-color: #0a0a0a;
+        min-height: 100vh;
+    width: 100%;
+        background-color: #121212;
+        color: #fff;
+        border-radius: 1em;
+    padding: 2em;
 }
 
 .poster-and-info {
     display: flex;
     flex-direction: row;
-    margin-bottom: 20px;
+    padding: 1em;
+    margin-bottom: 2em;
     justify-content: flex-start;
+    border-radius: 1em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #181818;
 }
 
 .movie-screen-back-button {
@@ -29,18 +37,36 @@
 
 .movie-details {
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    margin-left: 1em;
     width: 80%;
     padding: 0.5em 1em;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
     flex: 2;
-    align-items: left;
     text-align: left;
 }
 
 .genres-container {
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     margin: 10px 0;
+}
+
+.production-companies {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2em;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.production-companies-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1em;
+}
+
+.company-logo {
+    height: 30px;
+    margin-right: 10px;
 }
 
 .genres-container span {
@@ -55,14 +81,14 @@
 
 .movie-poster-container {
     flex: 1;
-    margin-bottom: 20px;
 }
 
 .movie-poster {
     width: 100%;
-    max-width: 300px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    margin-right: 1em;
+    max-width: 600px;
+    border-radius: 1.5em;
+    margin-bottom: 2empx;
 }
 
 .additional-info {
