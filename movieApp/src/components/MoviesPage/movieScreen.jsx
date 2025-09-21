@@ -51,8 +51,6 @@ function MovieScreen() {
 
     return (
       <div className="movie-screen-container">
-        <h3>Movie Screen</h3>
-        <p>Movie ID: {movieId}</p>
         <h2>{movieDetails.title}</h2>
         <div className='poster-and-info'>
           <div className='movie-poster-container'>
@@ -76,6 +74,13 @@ function MovieScreen() {
               <span>Status: {movieDetails.status}</span>
               <span id='status separator'> | </span>
               <span>Adult: {movieDetails.adult ? 'Yes' : 'No'}</span>
+              <div className="homepage-link">
+                {movieDetails.homepage && (
+                  <a href={movieDetails.homepage} target="_blank" rel="noopener noreferrer">
+                    Official Website
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
