@@ -28,6 +28,7 @@ function App() {
         <Route path="/groups" element={<GroupsPage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/favourites" element={<FavouritesPage />} />
+        <Route path="/reviews" element={<ReviewPage />} />
       </Routes>
       {location.pathname !== '/login' && location.pathname !== '/register' && (
         <BottomPanel token={token} />

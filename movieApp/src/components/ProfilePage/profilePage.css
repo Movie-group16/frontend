@@ -1,0 +1,118 @@
+.profile {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: Arial, sans-serif;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 1000px;
+    margin: 30px auto;
+}
+
+.header {
+display: flex;
+align-items: center;
+gap: 25px;
+}
+
+.profilepic {
+width: 140px;
+height: 140px;
+border-radius: 50%;
+margin-right: 20px;
+border: 2px solid #2a2a2a;
+}
+
+.name {
+margin: 0;
+color: #ffffff;
+font-size: 1.8rem;
+}
+
+.bio {
+margin: 10px 0;
+color: #b0b0b0;
+font-size: 1.2rem;
+}
+
+.sections {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+.reviewBox {
+  background-color: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  padding: 20px;
+  width: 48%;
+  border-radius: 8px;
+}
+.reviewBox ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.reviewBox li {
+  margin: 8px 0;
+  color: #dcdcdc;
+  font-size: 1.1rem;
+}
+
+.reviewBox button {
+  margin-top: 15px;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #494b4d;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.reviewBox button:hover {
+  background-color: #005fa3;
+}
+
+.movieBox {
+  background-color: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  padding: 20px;
+  width: 48%;
+  border-radius: 8px;
+}
+
+.movieBox ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.movieBox li {
+  margin: 8px 0;
+  color: #dcdcdc;
+  font-size: 1.1rem;
+}
+/*
+.movieBox button {
+  margin-top: 15px;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #494b4d;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.movieBox button:hover {
+  background-color: #005fa3;
+}
+*/
