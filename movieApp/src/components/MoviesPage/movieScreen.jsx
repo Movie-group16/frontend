@@ -93,15 +93,3 @@ function MovieScreen() {
 }
 
 export default MovieScreen
-
-/*
-{movieDetails != null ? (
-          <div>
-            <h2>{movieDetails.title}</h2>
-            <p>{movieDetails.overview}</p>
-            <p>Release Date: {movieDetails.release_date}</p>
-            <p>Rating: {movieDetails.vote_average} / 10</p>
-            </div>
-        ) : (
-          <p>Loading movie details...</p>
-        )}*/
