@@ -1,53 +1,78 @@
-.main-screen-container {
+
+.movie-screen-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #0a0a0a;
+}
+
+.poster-and-info {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    justify-content: flex-start;
+}
+
+.movie-screen-back-button {
+    align-self: flex-start;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #ff5555;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.movie-details {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    width: 80%;
+    padding: 0.5em 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex: 2;
+    align-items: left;
+    text-align: left;
+}
+
+.genres-container {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    margin: 10px 0;
+}
+
+.genres-container span {
+    background-color: #444;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin-right: 5px;
+    font-size: 0.9em;
+    
+}
+
+.movie-poster-container {
+    flex: 1;
+    margin-bottom: 20px;
+}
+
+.movie-poster {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.additional-info {
+  bottom: 0;
   width: 100%;
-  min-height: 100vh;
+  padding: 1em;
+  box-sizing: border-box;
+  font-size: small;
 }
 
-.main-screen-content {
-  margin-top: 2em;
-  margin-left: 2em;
-  text-align: left;
-  background: none;
-  max-width: 900px;
-}
-
-.main-screen-search {
-  margin-bottom: 1.5em;
-}
-
-.main-screen-search-input {
-  padding: 0.6em 2em 0.6em 2em;
-  border-radius: 20px;
-  border: 1px solid #888;
-  background: #222;
-  color: #fff;
-  font-size: 1em;
-  width: 260px;
-  outline: none;
-  display: block;
-  margin: 0 auto;
-}
-
-.main-screen-title {
-  margin-bottom: 2em;
-  color: #fff;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.main-screen-movie-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2em;
-  max-width: 700px;
-}
-
-.main-screen-movie-box {
-  height: 240px;
-  width: 200px;
-  background: none;
-  border: 2px solid #888;
-  border-radius: 6px;
+.additional-info p {
+    margin: 0.2em 0;
 }

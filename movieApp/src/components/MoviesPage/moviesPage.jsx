@@ -5,6 +5,7 @@ import { useState, useRef } from 'react'
 import ReactPaginate from 'react-paginate'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 
+
 function MoviesPage() {
 
   const movieDbApiKey = import.meta.env.VITE_TMDB_API_KEY
@@ -19,7 +20,11 @@ function MoviesPage() {
 
   const movieSearchUrl = `https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&page=${currentPage > 0 ? currentPage : 1}`
   const moviePopularUrl = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${currentPage > 0 ? currentPage : 1}`
+  const topRatedUrl = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${currentPage > 0 ? currentPage : 1}`
   
+  const getApproximatedRating = (rating) => {
+      return (rating * 1).toFixed(1)
+    }
   
   useEffect(() => {
     fetch(currentSearchTerm !== '' ? movieSearchUrl : moviePopularUrl,
@@ -79,7 +84,7 @@ function MoviesPage() {
                   }
                 </div>
               </div>
-              <p className="movie-vote">Rating: {item.vote_average} / 10</p>
+              <p className="movie-vote">Rating: {getApproximatedRating(item.vote_average)} / 10</p>
               <p className="movie-release-date">Release date: {item.release_date}</p>
               </button>
             ))}
