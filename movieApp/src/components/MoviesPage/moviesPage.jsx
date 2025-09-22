@@ -3,6 +3,8 @@ import './moviesPage.css'
 import { useEffect } from 'react'
 import { useState, useRef } from 'react'
 import ReactPaginate from 'react-paginate'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+
 
 function MoviesPage() {
 
@@ -16,9 +18,16 @@ function MoviesPage() {
   const [totalResults, setTotalResults] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
 
+  const movieSearchUrl = `https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&page=${currentPage > 0 ? currentPage : 1}`
+  const moviePopularUrl = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${currentPage > 0 ? currentPage : 1}`
+  const topRatedUrl = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${currentPage > 0 ? currentPage : 1}`
+  
+  const getApproximatedRating = (rating) => {
+      return (rating * 1).toFixed(1)
+    }
   
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&page=${currentPage > 0 ? currentPage : 1}`,
+    fetch(currentSearchTerm !== '' ? movieSearchUrl : moviePopularUrl,
       {
         headers : {
           'Authorization': `Bearer ${movieDbApiKey}`,
@@ -60,17 +69,22 @@ function MoviesPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <h2 className="movies-page-title">Movies</h2>
+          <h2 className="movies-page-title">{(currentSearchTerm === '' ? 'Popular Movies' : 'Movies')}</h2>
           <div className="movies-page-movie-grid">
             {movies && movies.map(item => (
-              <button key = {item.id} type="button">
+
+              <button key = {item.id} type="button" className="movie-button" onClick={() => window.location.href=`/movie/${item.id}`}>
                 <div className="movies-page-movie-box" >
                 <p className="movie-title">{item.title}</p>
                 <div className="movie-poster-container">
-                {item.poster_path ? <img className="movie-poster" src={`https://image.tmdb.org/t/p/w200${item.poster_path}`} alt={item.title} /> : <div className="no-image-available">No Image Available</div>}
+                  {
+                  item.poster_path ? 
+                    <img className="movie-poster" src={`https://image.tmdb.org/t/p/w200${item.poster_path}`} alt={item.title} /> 
+                    : <div className="no-image-available">No Image Available</div>
+                  }
                 </div>
               </div>
-              <p className="movie-vote">Rating: {item.vote_average} / 10</p>
+              <p className="movie-vote">Rating: {getApproximatedRating(item.vote_average)} / 10</p>
               <p className="movie-release-date">Release date: {item.release_date}</p>
               </button>
             ))}
