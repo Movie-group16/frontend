@@ -5,7 +5,7 @@ import './movieScreen.css'
 import { useEffect } from 'react'
 import { useState } from 'react'
 
-function MovieScreen() {
+function MovieScreen( {token} ) {
     
     const movieDbApiKey = import.meta.env.VITE_TMDB_API_KEY
     const location = useLocation()
@@ -91,6 +91,18 @@ function MovieScreen() {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              <div className='logged-in-features'>
+                {token ? (
+                  <div className='favourite-and-review'>
+                    <button className='add-to-favourites-button'>Add to Favourites</button>
+                    <input type="text" className='review-input' placeholder='Write a review...' />
+                    <button className='submit-review-button'>Submit Review</button>
+                  </div>
+                ) : (
+                  <p>Log in to add to favourites</p>
+                )}
               </div>
 
             </div>
