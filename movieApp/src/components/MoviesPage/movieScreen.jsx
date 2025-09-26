@@ -4,6 +4,10 @@ import { useLocation } from 'react-router-dom'
 import './movieScreen.css'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { FaRegStar } from "react-icons/fa6";
+import { FaRegStarHalfStroke } from "react-icons/fa6";
+import { FaStar } from "react-icons/fa6";
+import axios from 'axios';
 
 function MovieScreen( {token} ) {
     
@@ -15,6 +19,10 @@ function MovieScreen( {token} ) {
 
 
     const [movieDetails, setMovieDetails] = useState({})
+
+    const [reviewText, setReviewText] = useState("")
+    //max review score is 5. Shown with stars...
+    const [reviewScore, setReviewScore] = useState(0)
 
     useEffect(() => {
       fetch(movieDetailsUrl,
@@ -47,6 +55,41 @@ function MovieScreen( {token} ) {
 
     const getApproximatedRating = (rating) => {
       return (rating * 1).toFixed(1)
+    }
+
+    const url = 'http://localhost:3001'
+
+
+    const handleReview = async (e) => {
+      e.preventDefault()
+
+      //here try to submit review..
+      console.log("review should")
+      console.log(`${localStorage.getItem('userId')} is user id`)
+      try{
+        const response = await axios.post(`${url}/reviews/`, {
+
+          review:{
+            user_id: localStorage.getItem('userId'),
+            movie_id: movieId,
+            review_text: reviewText,
+            rating: reviewScore
+          }
+        })
+
+        console.log(response)
+      }
+      catch (error){
+          alert(error.response?.data?.message || "can't post review")
+      }
+
+    }
+
+    const handleFavourite = async (e) => {
+       
+      e.preventDefault()
+
+      //add to favourite..
     }
 
     return (
@@ -96,10 +139,36 @@ function MovieScreen( {token} ) {
               <div className='logged-in-features'>
                 {token ? (
                   <div className='favourite-and-review'>
-                    <button className='add-to-favourites-button'>Add to Favourites</button>
-                    <input type="text" className='review-input' placeholder='Write a review...' />
-                    <button className='submit-review-button'>Submit Review</button>
-                  </div>
+
+                    <form className='favourite' onSubmit={handleFavourite}> 
+                      <button className='add-to-favourites-button'>Add to Favourites</button>
+                    </form>
+
+                    <form className='review' onSubmit={handleReview}>
+                      <div className='starRating'>
+                      <p>Your review</p>
+                      {
+                        [...Array(5)].map((star, index) => {
+                          
+                          index++
+                          return(
+                            <button
+                              type="button"
+                              key={index}
+                              className={index <= reviewScore ? "star-on" : "star-off"}
+                              onClick={() => setReviewScore(index)}>
+                              {index <= reviewScore ? (<FaStar />) : <FaRegStar />}
+
+                            </button>
+                          )
+                        })
+                      }
+                    </div>
+                    <input type="text" className='review-input' placeholder='Write a review...' value={reviewText} onChange={e => setReviewText(e.target.value)}/>
+                    <button className='submit-review-button' type='submit'>Submit Review</button>
+                  </form>
+                    
+                </div>
                 ) : (
                   <p>Log in to add to favourites</p>
                 )}
