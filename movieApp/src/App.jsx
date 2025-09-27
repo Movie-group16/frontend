@@ -12,6 +12,7 @@ import GroupsPage from './components/GroupsPage/groupsPage.jsx'
 import FriendsPage from './components/FriendsPage/friendsPage.jsx'
 import FavouritesPage from './components/FavouritesPage/favouritesPage.jsx'
 import RegistrationPage from './components/RegistrationPage/registrationPage.jsx'
+import ReviewPage from './components/ReviewPage/reviewPage.jsx'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "")
