@@ -21,7 +21,9 @@ function Login({ setToken }) {
         }
       })
 
-      const token = response.data.token 
+      const token = response.data.token
+      console.log(response)
+      localStorage.setItem('userId', response.data.id)
       localStorage.setItem('token', token)
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       setToken(token)

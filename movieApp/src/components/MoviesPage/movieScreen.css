@@ -102,3 +102,29 @@
 .additional-info p {
     margin: 0.2em 0;
 }
+
+.review-input {
+
+    padding: 0 0 10vh;
+    width: 100%;
+    margin-left: 1em;
+    
+    margin-bottom: 1em;
+    text-align: left;
+}
+
+.starRating{
+    margin-top: 3em;
+    padding: 10px;
+    --border-radius: 1.5px;
+    --margin-right: 10px;
+}
+
+.star-on{
+    --border-color: #ff5555;
+    
+}
+.star-off{
+    
+    --border-color: azure;
+}
