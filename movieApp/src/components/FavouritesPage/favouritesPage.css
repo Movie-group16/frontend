@@ -1,0 +1,36 @@
+.favourites-page {
+  padding: 20px;
+}
+
+.favourites-list {
+  list-style: none;
+  padding: 0;
+}
+
+.favourite-movie {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  align-items: center;
+}
+
+.movie-id {
+  font-weight: 500;
+}
+
+.remove-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.remove-btn:hover {
+  background-color: #c0392b;
+}
