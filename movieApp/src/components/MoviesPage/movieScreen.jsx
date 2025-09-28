@@ -17,12 +17,14 @@ function MovieScreen( {token} ) {
 
     const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`
 
+    const url = 'http://localhost:3001'
+    const userId = localStorage.getItem('userId')
 
     const [movieDetails, setMovieDetails] = useState({})
-
     const [reviewText, setReviewText] = useState("")
     //max review score is 5. Shown with stars...
     const [reviewScore, setReviewScore] = useState(0)
+    const [isFavourite, setIsFavourite] = useState(false)
 
     useEffect(() => {
       fetch(movieDetailsUrl,
@@ -41,6 +43,19 @@ function MovieScreen( {token} ) {
           .catch(err => console.log(err))
     }, [])
 
+    useEffect(() => {
+    const fetchFavourites = async () => {
+      try {
+        const res = await axios.get(`${url}/favourites/user/${userId}/favourites`)
+        const favs = res.data.map(f => f.movie_id)
+        setIsFavourite(favs.includes(Number(movieId)))
+      } catch (err) {
+        console.error("Error checking favourites:", err)
+      }
+    }
+    fetchFavourites()
+  }, [])
+
     const getMoneyInReadableFormat = (money) => {
       if (money >= 1000000000) {
         return (money / 1000000000).toFixed() + 'B $';
@@ -56,9 +71,6 @@ function MovieScreen( {token} ) {
     const getApproximatedRating = (rating) => {
       return (rating * 1).toFixed(1)
     }
-
-    const url = 'http://localhost:3001'
-
 
     const handleReview = async (e) => {
       e.preventDefault()
@@ -86,12 +98,14 @@ function MovieScreen( {token} ) {
     }
 
     const handleFavourite = async (e) => {
-       
-      e.preventDefault()
-
-      //add to favourite..
-    }
-
+      e.preventDefault()   
+      try {
+        await axios.post(`${url}/favourites/users/${userId}/favourites/${movieId}`)
+        setIsFavourite(true)
+      } catch (error) {
+        alert(error.response?.data?.message || "Can't add favourite")
+      }
+  }
     return (
       <div className="movie-screen-container">
         <h2>{movieDetails.title}</h2>
@@ -141,7 +155,13 @@ function MovieScreen( {token} ) {
                   <div className='favourite-and-review'>
 
                     <form className='favourite' onSubmit={handleFavourite}> 
-                      <button className='add-to-favourites-button'>Add to Favourites</button>
+                      <button
+                       className='add-to-favourites-button'
+                       type='submit'
+                       disabled={isFavourite}
+                      >
+                        {isFavourite ? 'Added to favourites' : 'Add to favourites'}
+                      </button>
                     </form>
 
                     <form className='review' onSubmit={handleReview}>
