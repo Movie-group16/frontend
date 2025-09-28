@@ -1,40 +1,52 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './favouritesPage.css'
+import axios from 'axios'
 
 function FavouritesPage() {
   const [favourites, setFavourites] = useState([])
   const [loading, setLoading] = useState(true)
-  
   const userId = localStorage.getItem('userId')
+  const tmdbApiKey = import.meta.env.VITE_TMDB_API_KEY
+  const backendUrl = 'http://localhost:3001'
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/favourites/user/${userId}/favourites`)
-        if (!res.ok) throw new Error("Failed to fetch favourite movies")
-        const data = await res.json()
-        setFavourites(data)
+        const res = await axios.get(`${backendUrl}/favourites/user/${userId}/favourites`)
+        const favIds = res.data.map(f => f.movie_id)
+
+        const movieDetails = await Promise.all(
+          favIds.map(async (movieId) => {
+            const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=en-US`, {
+              headers: {
+                'Authorization': `Bearer ${tmdbApiKey}`,
+                'Content-Type': 'application/json;charset=utf-8',
+              }
+            })
+            return await res.json()
+          })
+        )
+
+        setFavourites(movieDetails)
       } catch (err) {
-        console.error(err)
+        console.error('Error fetching favourites:', err)
       } finally {
         setLoading(false)
       }
     }
     fetchFavourites()
-  }, [userId])
+  }, [userId, tmdbApiKey])
 
   const removeFavourite = async (movieId) => {
     try {
-      const res = await fetch(`http://localhost:3001/favourites/users/${userId}/favourites/${movieId}`, {
-        method: "DELETE",
-      })
-      if (!res.ok) throw new Error("Failed to delete the favourite")
-
-      setFavourites(favourites.filter((movie) => movie.movie_id !== movieId))
+      await axios.delete(`${backendUrl}/favourites/users/${userId}/favourites/${movieId}`)
+      setFavourites(favourites.filter((movie) => movie.id !== movieId))
     } catch (err) {
-      console.error(err);
-      alert("Failed to remove the favourite")
+      console.error(err)
+      alert('Failed to remove favourite from the list')
     }
   }
 
@@ -48,15 +60,38 @@ function FavouritesPage() {
       ) : (
         <ul className='favourites-list'>
           {favourites.map((movie) => (
-            <li key={movie.movie_id} className='favourite-movie'>
-              <span className='movie-id'>
-                {`Movie #${movie.movie_id}`}
-              </span>
-              <button className='remove-btn' 
-              onClick={() => removeFavourite(movie.movie_id)}
-              >
-                Remove
-              </button>
+            <li key={movie.id} className='favourite-movie'>
+              <div className='movie-image-wrapper'>
+                {movie.poster_path ? (
+                  <img 
+                    src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                    alt={movie.title}
+                    className='movie-image'
+                    onClick={() => navigate(`/movie/${movie.id}`)}
+                  />
+                ) : (
+                  <div
+                    className='no-image'
+                    onClick={() => (`/movie/${movie.id}`)}
+                  >
+                    No image available
+                  </div>
+                )}
+                <div className='movie-overlay'>
+                  <span
+                    className='movie-title'
+                    onClick={() => navigate(`/movie/${movie.id}`)}
+                  >
+                    {movie.title}
+                  </span>
+                  <button 
+                    className='remove-btn' 
+                    onClick={() => removeFavourite(movie.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
@@ -64,5 +99,5 @@ function FavouritesPage() {
     </div>
   )
 }
-    
+
 export default FavouritesPage
