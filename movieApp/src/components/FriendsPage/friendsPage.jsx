@@ -39,7 +39,6 @@ function FriendsPage() {
   const fetchFriendRequests = async () => {
     setLoading(true)
     try {
-      console.log('Fetching requests for userId:', userId)
       const response = await axios.get(`http://localhost:3001/friends/requests?userId=${userId}`)
       setFriendRequests(response.data.requests || [])
     } catch (error) {
@@ -75,15 +74,6 @@ function FriendsPage() {
     }
   }
 
-  // const checkSentRequests = async (userId) => {
-  //   try {
-  //     const response = await axios.get(`http://localhost:3001/friends/sent-requests`)
-  //     setSentRequests(response.data.requests?.map(req => req.friend_id) || [])
-  //   } catch (error) {
-  //     console.error('Error fetching sent requests:', error)
-  //   }
-  // }
-
   const checkFriendshipStatus = async (friendId) => {
     try {
       const response = await axios.get(`http://localhost:3001/friends/status/${friendId}?userId=${userId}`)
@@ -103,6 +93,10 @@ function FriendsPage() {
   const addFriend = async (friendId) => {
     try {
       await axios.post('http://localhost:3001/friends/request', {userId, friendId})
+      setFriendshipStatus(prev => ({
+        ...prev,
+        [friendId]: 'pending'
+      }))
       setSentRequests([...sentRequests, friendId])
     } catch (error) {
       console.error('Error sending friend request:', error)
@@ -113,6 +107,10 @@ function FriendsPage() {
   const acceptFriendRequest = async (friendId) => {
     try {
       await axios.put(`http://localhost:3001/friends/accept/${friendId}`, { userId })
+      setFriendshipStatus(prev => ({
+        ...prev,
+        [friendId]: 'friends'
+      }))
       fetchFriendRequests() 
     } catch (error) {
       console.error('Error accepting friend request:', error)
@@ -123,6 +121,10 @@ function FriendsPage() {
   const rejectFriendRequest = async (friendId) => {
     try {
       await axios.put(`http://localhost:3001/friends/reject/${friendId}`, { userId })
+      setFriendshipStatus(prev => ({
+        ...prev,
+        [friendId]: 'not_friends'
+      }))
       fetchFriendRequests() 
     } catch (error) {
       console.error('Error rejecting friend request:', error)
@@ -131,14 +133,12 @@ function FriendsPage() {
   }
 
   const removeFriend = async (friendId) => {
-    if (confirm('Are you sure you want to remove this friend?')) {
-      try {
-        await axios.delete(`http://localhost:3001/friends/remove/${friendId}`, { data: { userId } })
-        fetchFriends() 
-      } catch (error) {
-        console.error('Error removing friend:', error)
-        alert('Failed to remove friend')
-      }
+    try {
+      await axios.delete(`http://localhost:3001/friends/remove/${friendId}`, { data: { userId } })
+      fetchFriends() 
+    } catch (error) {
+      console.error('Error removing friend:', error)
+      alert('Failed to remove friend')
     }
   }
 
@@ -158,12 +158,21 @@ function FriendsPage() {
         )
       case 'awaiting':
         return (
-          <button 
-            className="accept-request-btn"
-            onClick={() => acceptFriendRequest(user.id)}
-          >
-            Accept Request
-          </button>
+          <div>
+            <button 
+              className="accept-request-btn"
+              onClick={() => acceptFriendRequest(user.id)}
+            >
+              Accept Request
+            </button>
+            <button 
+              className="accept-request-btn"
+              style={{ marginLeft: '10px' }}
+              onClick={() => rejectFriendRequest(user.id)}
+            >
+              Reject request
+            </button>
+          </div>
         )
       case 'pending':
         return (
