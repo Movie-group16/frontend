@@ -12,7 +12,7 @@ function Login({ setToken }) {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post(import.meta.env.BACKEND_URL + 'user/login', {
+      const response = await axios.post(import.meta.env.BACKEND_URL + '/user/login', {
         user: {
           nameoremail,
           password_hash: password, 
