@@ -4,19 +4,19 @@ import { useNavigate } from 'react-router-dom'
 import './login.css'
 
 function Login({ setToken }) {
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
+  const [nameoremail, setNameOrEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
 
+  const url = 'http://localhost:3001'
+
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('http://localhost:3001/user/login', {
+      const response = await axios.post(url + '/user/login', {
         user: {
-          username,
-          email, 
+          nameoremail,
           password_hash: password, 
         }
       })
@@ -38,25 +38,13 @@ function Login({ setToken }) {
       <h2>Login</h2>
       <div>
         <label>
-          Username:
+          Username or email:
           <input
             type="text"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
+            value={nameoremail}
+            onChange={e => setNameOrEmail(e.target.value)}
             required
-            placeholder="Type username"
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-            placeholder="Type email"
+            placeholder="Type username or email"
           />
         </label>
       </div>
