@@ -9,10 +9,12 @@ function Login({ setToken }) {
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
 
+  const url = 'http://localhost:3001'
+
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post(import.meta.env.BACKEND_URL + '/user/login', {
+      const response = await axios.post(url + '/user/login', {
         user: {
           nameoremail,
           password_hash: password, 
