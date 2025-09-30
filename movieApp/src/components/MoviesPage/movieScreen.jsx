@@ -17,7 +17,7 @@ function MovieScreen( {token} ) {
 
     const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`
 
-    const url = import.meta.env.BACKEND_URL
+    const url = 'http://localhost:3001'
     const userId = localStorage.getItem('userId')
 
     const [movieDetails, setMovieDetails] = useState({})
