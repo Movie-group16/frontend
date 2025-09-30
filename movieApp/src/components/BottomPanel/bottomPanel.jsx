@@ -4,10 +4,10 @@ import './bottomPanel.css'
 const panelRoutes = [
   { label: 'Movies', path: '/' },
   { label: 'Showtimes', path: '/showtimes' },
-  { label: 'Profile', path: '/profile' },
+  { label: 'Profile', path: '/profile/' + localStorage.getItem('userId') },
   { label: 'Groups', path: '/groups' },
   { label: 'Friends', path: '/friends' },
-  { label: 'Favourites', path: '/favourites' },
+  { label: 'Favourites', path: '/favourites/' + localStorage.getItem('userId') },
 ]
 
 function BottomPanel({ token }) {
