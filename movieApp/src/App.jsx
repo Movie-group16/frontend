@@ -26,10 +26,10 @@ function App() {
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/showtimes" element={<ShowtimesPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/groups" element={<GroupsPage />} />
         <Route path="/friends" element={<FriendsPage />} />
-        <Route path="/favourites" element={<FavouritesPage />} />
+        <Route path="/favourites/:id" element={<FavouritesPage />} />
         <Route path="/movie/:id" element={<MovieScreen token={token}/>} />
       </Routes>
       {location.pathname !== '/login' && location.pathname !== '/register' && (
