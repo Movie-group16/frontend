@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './friendsPage.css'
+import { useNavigate } from 'react-router-dom'
 
 function FriendsPage() {
+  const navigate = useNavigate()
+
   const [activeTab, setActiveTab] = useState('search')
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResult, setSearchResult] = useState(null)
@@ -15,6 +18,8 @@ function FriendsPage() {
   const [friendshipStatus, setFriendshipStatus] = useState({})
 
   const userId = localStorage.getItem('userId')
+  const token = useState(localStorage.getItem("token"))
+
 
   useEffect(() => {
     if (activeTab === 'friends') {
@@ -29,7 +34,11 @@ function FriendsPage() {
   const fetchFriends = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`http://localhost:3001/friends?userId=${userId}`)
+      const response = await axios.get(`http://localhost:3001/friends?userId=${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       setFriends(response.data.friends || [])
     } catch (error) {
       console.error('Error fetching friends:', error)
@@ -41,7 +50,11 @@ function FriendsPage() {
   const fetchFriendRequests = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`http://localhost:3001/friends/requests?userId=${userId}`)
+      const response = await axios.get(`http://localhost:3001/friends/requests?userId=${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       setFriendRequests(response.data.requests || [])
     } catch (error) {
       console.error('Error fetching friend requests:', error)
@@ -53,7 +66,11 @@ function FriendsPage() {
   const fetchSentRequests = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`http://localhost:3001/friends/sent?userId=${userId}`)
+      const response = await axios.get(`http://localhost:3001/friends/sent?userId=${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       console.log('Sent requests response:', response.data)
       setSentRequests(response.data.sent_requests || response.data.requests || [])
     } catch (error) {
@@ -74,7 +91,11 @@ function FriendsPage() {
     setIsSearching(true)
     setHasSearched(true)
     try {
-      const response = await axios.get(`http://localhost:3001/user/${searchTerm}`)
+      const response = await axios.get(`http://localhost:3001/user/${searchTerm}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       const users = response.data || []
       const foundUser = users.length > 0 ? users[0] : null
       setSearchResult(foundUser)
@@ -91,7 +112,11 @@ function FriendsPage() {
 
   const checkFriendshipStatus = async (friendId) => {
     try {
-      const response = await axios.get(`http://localhost:3001/friends/status/${friendId}?userId=${userId}`)
+      const response = await axios.get(`http://localhost:3001/friends/status/${friendId}?userId=${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       
       setFriendshipStatus(prev => ({
         ...prev,
@@ -107,7 +132,11 @@ function FriendsPage() {
 
   const addFriend = async (friendId) => {
     try {
-      await axios.post('http://localhost:3001/friends/request', {userId, friendId})
+      await axios.post('http://localhost:3001/friends/request', {userId, friendId}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       setFriendshipStatus(prev => ({
         ...prev,
         [friendId]: 'pending'
@@ -121,7 +150,11 @@ function FriendsPage() {
 
   const acceptFriendRequest = async (friendId) => {
     try {
-      await axios.put(`http://localhost:3001/friends/accept/${friendId}`, { userId })
+      await axios.put(`http://localhost:3001/friends/accept/${friendId}`, { userId }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       setFriendshipStatus(prev => ({
         ...prev,
         [friendId]: 'friends'
@@ -135,7 +168,11 @@ function FriendsPage() {
 
   const rejectFriendRequest = async (friendId) => {
     try {
-      await axios.put(`http://localhost:3001/friends/reject/${friendId}`, { userId })
+      await axios.put(`http://localhost:3001/friends/reject/${friendId}`, { userId }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       setFriendshipStatus(prev => ({
         ...prev,
         [friendId]: 'not_friends'
@@ -149,7 +186,11 @@ function FriendsPage() {
 
   const cancelFriendRequest = async (friendId) => {
     try {
-      await axios.put(`http://localhost:3001/friends/cancel/${friendId}`, { userId })
+      await axios.put(`http://localhost:3001/friends/cancel/${friendId}`, { userId }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       setFriendshipStatus(prev => ({
         ...prev,
         [friendId]: 'not_friends'
@@ -163,7 +204,11 @@ function FriendsPage() {
 
   const removeFriend = async (friendId) => {
     try {
-      await axios.delete(`http://localhost:3001/friends/remove/${friendId}`, { data: { userId } })
+      await axios.delete(`http://localhost:3001/friends/remove/${friendId}`, { data: { userId } }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       fetchFriends() 
     } catch (error) {
       console.error('Error removing friend:', error)
@@ -252,6 +297,12 @@ function FriendsPage() {
                     {searchResult.user_desc && <p>Bio: {searchResult.user_desc}</p>}
                     <div className="profile-actions">
                       {renderFriendshipButton(searchResult)}
+                      <button 
+                        className="go-to-profile-btn"
+                        onClick={() => navigate(`/profile/${searchResult.id}`)}
+                      >
+                        Go to Profile
+                      </button>
                     </div>
                   </div>
                 ) : (

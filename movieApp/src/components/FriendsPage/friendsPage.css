@@ -379,6 +379,30 @@
   background: #2a2a2a;
 }
 
+.profile-actions {
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: center;
+}
+
+.go-to-profile-btn {
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  border: 2px solid #888;
+  background: transparent;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.go-to-profile-btn:hover {
+  background: #555;
+  border-color: #646cff;
+}
+
 @media (max-width: 768px) {
   .friends-nav {
     flex-direction: column;
