@@ -18,16 +18,54 @@ function MoviesPage() {
   const [totalResults, setTotalResults] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
 
-  const movieSearchUrl = `https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&page=${currentPage > 0 ? currentPage : 1}`
-  const moviePopularUrl = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${currentPage > 0 ? currentPage : 1}`
-  const topRatedUrl = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${currentPage > 0 ? currentPage : 1}`
+  //is the filtering applied....
+  const [filtering, setFiltering] = useState(false)
+
+  //set start and end datesin filtering
+  const primaryReleaseYear = useRef('')
+
+  
+  const sort_by = ["",""]
+
+  const [searchType, setSearchType] = useState('')
+
+  const getCurrentPage = () => {return currentPage > 0 ? currentPage : 1}
+
+  const movieSearchUrl = `https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&page=${getCurrentPage()}`
+  const movieDiscoverUrl = `https://api.themoviedb.org/3/discover/movie?&include_adult=false&include_video=false&language=en-USpage=${getCurrentPage()}&sort_by=popularity.desc`
+  const popularUrl = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${getCurrentPage()}`
+  const topRatedUrl = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${getCurrentPage()}`
+  const nowPlayingUrl = `https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${getCurrentPage()}`
+  const upcomingUrl = `https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=${getCurrentPage()}`
+
+
+  const searchTypes = ["popular", "top rated", "now playing", "upcoming"]
+
+  const getSearchUrl = (searchTerm, type) => {
+    if(searchTerm !== '') return movieSearchUrl
+
+    switch(type){
+      case searchTypes[0]:
+        return popularUrl
+      case searchTypes[1]:
+        return topRatedUrl
+      case searchTypes[2]:
+        return nowPlayingUrl
+      case searchTypes[3]:
+        return upcomingUrl
+
+      default:
+        return popularUrl
+    }
+  }
   
   const getApproximatedRating = (rating) => {
       return (rating * 1).toFixed(1)
     }
   
   useEffect(() => {
-    fetch(currentSearchTerm !== '' ? movieSearchUrl : moviePopularUrl,
+    
+    fetch(getSearchUrl(currentSearchTerm, searchType),
       {
         headers : {
           'Authorization': `Bearer ${movieDbApiKey}`,
@@ -42,7 +80,7 @@ function MoviesPage() {
         setMovies(json.results)
       })
       .catch(err => console.log(err))
-    }, [currentPage, currentSearchTerm])
+    }, [currentPage, currentSearchTerm, searchType])
 
     const handleSubmit = (e) => {
       e.preventDefault()
@@ -69,7 +107,32 @@ function MoviesPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <h2 className="movies-page-title">{(currentSearchTerm === '' ? 'Popular Movies' : 'Movies')}</h2>
+          <div className='filtering'>
+
+            <label>Filter search? </label>
+            <input type='checkbox' id='filtering' name='filter' value={filtering} onClick={() => setFiltering(!filtering)}/>
+
+            {
+              filtering && (
+                <div className='dateFilter'>
+                  <div className='primaryRelease'>
+                    <label>Release year: </label>
+                    <input type='number' min='1900' max='2099' id='primaryRelease' onChange={(e) => primaryReleaseYear.current = e.target.value}/>
+                  </div>
+                </div>
+              )
+            }
+
+            <div className='emptySearchShowcase'>
+              {
+                currentSearchTerm === '' && searchTypes.map(item => (
+                  <button type='button' key={item} className='emptySearchFilterButton' onClick={() => setSearchType(item)}>{item}</button>
+                ))
+              }
+            </div>
+
+          </div>
+          <h2 className="movies-page-title">{(currentSearchTerm === '' ? `${searchType} Movies` : 'Movies')}</h2>
           <div className="movies-page-movie-grid">
             {movies && movies.map(item => (
 
@@ -107,26 +170,6 @@ function MoviesPage() {
         </div>
       </form>
     )
-
-  /*return (
-    <div className="movies-page-container">
-      <div className="movies-page-content">
-        <div className="movies-page-search">
-          <input
-            type="text"
-            placeholder="Search"
-            className="movies-page-search-input"
-          />
-        </div>
-        <h2 className="movies-page-title">Movies</h2>
-        <div className="movies-page-movie-grid">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="movies-page-movie-box" />
-          ))}
-        </div>
-      </div>
-    </div>
-  )*/
 }
 
 export default MoviesPage

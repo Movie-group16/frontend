@@ -33,6 +33,7 @@
 }
 
 .movies-page-title {
+  text-transform: capitalize;
   margin-bottom: 2em;
   color: #fff;
   text-align: center;

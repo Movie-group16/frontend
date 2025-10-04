@@ -8,6 +8,8 @@ import { FaRegStar } from "react-icons/fa6";
 import { FaRegStarHalfStroke } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa6";
 import axios from 'axios';
+import movieVideos from './movieVideos'
+import reviewShowcase from './reviewShowcase';
 
 function MovieScreen( {token} ) {
     
@@ -25,8 +27,15 @@ function MovieScreen( {token} ) {
     //max review score is 5. Shown with stars...
     const [reviewScore, setReviewScore] = useState(0)
     const [isFavourite, setIsFavourite] = useState(false)
+    const [hasReview, setHasReview] = useState(false)
 
+    
+    
     useEffect(() => {
+      
+      fetchFavourites()
+      //fetchReviews()
+
       fetch(movieDetailsUrl,
         {
           headers : {
@@ -42,8 +51,25 @@ function MovieScreen( {token} ) {
           })
           .catch(err => console.log(err))
     }, [])
+    
+/*
+    const fetchReviews = async () => {
+      try {
+        console.log("user id " + userId + ` ${url}/reviews/${userId}`)
+        const res = await axios.get(`${url}/reviews/${userId}/${movieId}`)
+        const reviews = res.data
 
-    useEffect(() => {
+        if( reviews[0] && reviews[0].movie_id === Number(movieId)){
+
+          console.log("has review")
+          setHasReview(true)
+          setReviewScore(reviews[0].rating)
+          setReviewText(reviews[0].review_text)
+        }
+      } catch (err) {
+        console.error("Error checking favourites:", err)
+      }
+    }*/
     const fetchFavourites = async () => {
       try {
         const res = await axios.get(`${url}/favourites/user/${userId}/favourites`)
@@ -53,9 +79,6 @@ function MovieScreen( {token} ) {
         console.error("Error checking favourites:", err)
       }
     }
-    fetchFavourites()
-  }, [])
-
     const getMoneyInReadableFormat = (money) => {
       if (money >= 1000000000) {
         return (money / 1000000000).toFixed() + 'B $';
@@ -90,6 +113,8 @@ function MovieScreen( {token} ) {
         })
 
         console.log(response)
+
+        setHasReview(true)
       }
       catch (error){
           alert(error.response?.data?.message || "can't post review")
@@ -163,36 +188,19 @@ function MovieScreen( {token} ) {
                         {isFavourite ? 'Added to favourites' : 'Add to favourites'}
                       </button>
                     </form>
-
-                    <form className='review' onSubmit={handleReview}>
-                      <div className='starRating'>
-                      <p>Your review</p>
-                      {
-                        [...Array(5)].map((star, index) => {
-                          
-                          index++
-                          return(
-                            <button
-                              type="button"
-                              key={index}
-                              className={index <= reviewScore ? "star-on" : "star-off"}
-                              onClick={() => setReviewScore(index)}>
-                              {index <= reviewScore ? (<FaStar />) : <FaRegStar />}
-
-                            </button>
-                          )
-                        })
-                      }
-                    </div>
-                    <input type="text" className='review-input' placeholder='Write a review...' value={reviewText} onChange={e => setReviewText(e.target.value)}/>
-                    <button className='submit-review-button' type='submit'>Submit Review</button>
-                  </form>
+                    { reviewShowcase(token) }
                     
                 </div>
                 ) : (
                   <p>Log in to add to favourites</p>
                 )}
               </div>
+
+            </div>
+            <div className='videos'>
+              {movieVideos(movieId)}
+            </div>
+            <div className='similiarMovies'>
 
             </div>
           </div>
