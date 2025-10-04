@@ -63,6 +63,18 @@
   transition: background-color 0.3s, transform 0.2s;
 }
 
+.go-back-btn {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  margin-top: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
 .submit-btn:hover {
   background-color: #187bcd;
   transform: translateY(-2px);

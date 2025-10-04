@@ -44,7 +44,7 @@ function CreateGroupPage() {
           onChange={(e) => setName(e.target.value)}
           required
         />
-        
+
         <label>Description</label>
         <textarea 
           value={group_desc}
@@ -61,6 +61,10 @@ function CreateGroupPage() {
 
         <button type="submit" className="submit-btn">Create</button>
       </form>
+
+      <button className="go-back-btn" onClick={() => navigate('/groups')}>
+        Go Back
+      </button>
     </div>
   )
 }
