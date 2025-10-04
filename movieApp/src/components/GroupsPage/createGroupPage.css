@@ -32,8 +32,17 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 16px;
-  resize: none;
+  box-sizing: border-box;
   transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.create-group-form input {
+  height: 40px;
+}
+
+.create-group-form textarea {
+  min-height: 100px;
+  resize: none;
 }
 
 .create-group-form input:focus,
@@ -41,10 +50,6 @@
   border-color: #1e90ff;
   box-shadow: 0 0 5px rgba(30, 144, 255, 0.4);
   outline: none;
-}
-
-.create-group-form textarea {
-  min-height: 100px;
 }
 
 .submit-btn {
@@ -65,17 +70,4 @@
 
 .submit-btn:active {
   transform: translateY(0);
-}
-
-/* Responsive layout */
-@media (max-width: 768px) {
-  .create-group-page {
-    margin: 20px;
-    padding: 20px;
-  }
-
-  .create-group-form input,
-  .create-group-form textarea {
-    font-size: 14px;
-  }
 }

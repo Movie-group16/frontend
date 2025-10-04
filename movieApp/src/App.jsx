@@ -29,7 +29,7 @@ function App() {
         <Route path="/showtimes" element={<ShowtimesPage />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/groups" element={<GroupsPage />} />
-        <Route path="/create-group" element={<CreateGroupPage />} />
+        <Route path="/groups/create" element={<CreateGroupPage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/favourites/:id" element={<FavouritesPage />} />
         <Route path="/movie/:id" element={<MovieScreen token={token}/>} />

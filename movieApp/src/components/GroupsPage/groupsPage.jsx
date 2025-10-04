@@ -23,36 +23,42 @@ function GroupsPage() {
   }, [])
 
   const filteredGroups = groups.filter(group =>
-    group.name.toLowerCase().includes(searchTerm.toLowerCase())
+    group.group_name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
     <div className="groups-page">
       <h2>Groups</h2>
-      <div className="groups-header">
+
+      <div className="group-controls">
         <input
           type="text"
           placeholder="Search groups..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="searchBar"
+          className="group-search"
         />
-        <button
+        <button 
           className="create-group-btn"
-          onClick={() => navigate('/create-group')}
+          onClick={() => navigate('/groups/create')}
         >
-          Create group
+        Create Group
         </button>
       </div>
 
-      <ul className="groups-list">
-        {filteredGroups.map(group => (
-          <li key={group.id} className="group-card">
-            <h3>{group.name}</h3>
-            <p>{group.description}</p>
-          </li>
-        ))}
-      </ul>
+      <div className="groups-list">
+        {filteredGroups.length > 0 ? (
+          filteredGroups.map((group) => (
+            <div key={group.id} className="group-card">
+              <h3>{group.group_name}</h3>
+              <p className="group-desc">{group.group_desc}</p>
+              <p className="group-rules"><strong>Rules:</strong> {group.group_rules}</p>
+            </div>
+          ))
+        ) : (
+          <p className="no-results">No groups found.</p>
+        )}
+      </div>
     </div>
   )
 }

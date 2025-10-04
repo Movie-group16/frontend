@@ -5,25 +5,31 @@ import { useNavigate } from 'react-router-dom'
 import './createGroupPage.css'
 
 function CreateGroupPage() {
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
-  const [rules, setRules] = useState("")
+  const [group_name, setName] = useState("")
+  const [group_desc, setDescription] = useState("")
+  const [group_rules, setRules] = useState("")
   const navigate = useNavigate()
   const backendUrl = 'http://localhost:3001'
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    const owner_id = localStorage.getItem('userId')
+
     try {
       await axios.post(`${backendUrl}/groups`, {
-        name,
-        description,
-        rules
+        group: {
+          group_name,
+          owner_id,
+          group_desc,
+          group_rules
+        }
       })
       alert("Group created successfully!")
       navigate('/groups')
     } catch (err) {
-      console.error(err)
-      alert("Failed to create group")
+      console.error("Error creating group:", err.response?.data || err.message)
+      alert(err.response?.data?.message || "Failed to create group")
     }
   }
 
@@ -34,21 +40,21 @@ function CreateGroupPage() {
         <label>Group Name</label>
         <input 
           type="text"
-          value={name}
+          value={group_name}
           onChange={(e) => setName(e.target.value)}
           required
         />
-
+        
         <label>Description</label>
         <textarea 
-          value={description}
+          value={group_desc}
           onChange={(e) => setDescription(e.target.value)}
           required
         />
 
         <label>Rules</label>
         <textarea 
-          value={rules}
+          value={group_rules}
           onChange={(e) => setRules(e.target.value)}
           required
         />
