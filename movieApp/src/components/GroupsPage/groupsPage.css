@@ -9,16 +9,16 @@
   display: flex;
   justify-content: center;
   gap: 2em;
-  margin-bottom: 3em;
+  margin-bottom: 2em;
 }
 
 .nav-btn {
-  padding: 1em 2em;
+  padding: 0.8em 1.5em;
   border: 2px solid #888;
   border-radius: 8px;
   background: transparent;
   color: #fff;
-  font-size: 1.1em;
+  font-size: 1em;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
@@ -35,23 +35,40 @@
   color: #fff;
 }
 
+.create-group-container {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.create-group-btn {
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  border: 2px solid #44cc44;
+  background: #44cc44;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.create-group-btn:hover {
+  background: #33aa33;
+  border-color: #33aa33;
+}
+
 .groups-content {
   display: flex;
   flex-direction: column;
-  gap: 2em;
-  align-items: center;
-  width: 100%;
+  gap: 1.5em;
 }
 
-.groups-search-section {
-  display: flex;
-  gap: 1em;
-  justify-content: center;
-  width: 100%;
+.search-section {
+  text-align: center;
+  margin-bottom: 1em;
 }
 
 .search-input {
-  padding: 0.8em;
+  padding: 0.6em 1em;
   border-radius: 8px;
   border: 2px solid #888;
   background: #333;
@@ -61,28 +78,15 @@
   width: 300px;
 }
 
-.create-group-btn {
-  padding: 0.8em 1.5em;
-  border-radius: 8px;
-  border: 2px solid #28a745;
-  background: #28a745;
-  color: #fff;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
+.search-input:focus {
+  border-color: #646cff;
 }
 
-.create-group-btn:hover {
-  background: #218838;
-  border-color: #218838;
-}
-
-.groups-list {
+.group-list {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  width: 100%;
-  max-width: 600px;
+  align-items: center;
 }
 
 .group-card {
@@ -90,59 +94,38 @@
   border: 1px solid #555;
   border-radius: 8px;
   padding: 1.5em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
-
-.group-card strong {
-  color: #646cff;
-  font-size: 1.2em;
+  width: 100%;
+  max-width: 500px;
 }
 
 .group-card p {
-  color: #ccc;
-  margin: 0.25em 0;
-}
-
-.join-btn,
-.member-btn {
-  margin-top: 0.5em;
-  padding: 0.5em 1em;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 2px solid;
-  transition: all 0.2s;
-}
-
-.requested-btn {
-  background: #888;
-  border: 1px solid #888;
-  color: #fff;
-  cursor: not-allowed;
-}
-
-.requested-btn:hover {
-  background: #888;
+  margin: 0.3em 0;
 }
 
 .join-btn {
-  background-color: #28a745;
-  border-color: #28a745;
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  border: 1px solid #44cc44;
+  background: #44cc44;
   color: #fff;
+  cursor: pointer;
+  margin-top: 0.5em;
 }
 
 .join-btn:hover {
-  background-color: #218838;
-  border-color: #218838;
+  background: #33aa33;
+  border-color: #33aa33;
 }
 
-.member-btn {
-  background-color: #6c757d;
-  border-color: #6c757d;
-  color: #fff;
-  cursor: default;
+.owner-label, .member-label {
+  margin-top: 0.5em;
+  font-style: italic;
+  color: #aaa;
 }
 
+.no-results, .no-search-text {
+  text-align: center;
+  color: #ccc;
+  font-size: 1.1em;
+}
 
