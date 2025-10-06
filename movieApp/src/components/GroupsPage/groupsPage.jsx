@@ -15,7 +15,6 @@ function GroupsPage() {
   const backendUrl = 'http://localhost:3001'
   const userId = Number(localStorage.getItem('userId'))
 
-  // Fetch all groups
   useEffect(() => {
     const fetchGroups = async () => {
       try {
@@ -149,25 +148,34 @@ useEffect(() => {
               ) : filteredGroups.length === 0 ? (
                 <p className="no-results">No groups found.</p>
               ) : (
-                filteredGroups.map((g) => renderGroupCard(g, true))
+                filteredGroups.map((g) => (
+                  <React.Fragment key={g.id}>
+                    {renderGroupCard(g, true)}
+                  </React.Fragment>
+                ))
               )}
             </div>
           </div>
         )
 
       case 'mygroups':
-        return (
-          <div className="groups-content single-column">
-            <h3>My Groups</h3>
-            {myGroups.length === 0 ? (
-              <p>You haven't joined or created any groups yet.</p>
-            ) : (
-              <div className="group-list">
-                {myGroups.map(g => renderGroupCard(g))}
-              </div>
-            )}
-          </div>
-        )
+  return (
+    <div className="groups-content single-column">
+      <h3>My Groups</h3>
+      {myGroups.length === 0 ? (
+        <p>You haven't joined or created any groups yet.</p>
+      ) : (
+        <div className="group-list">
+          {myGroups.map((g) => (
+            <React.Fragment key={g.group_id || g.id}>
+              {renderGroupCard(g)}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+
 
       case 'discover':
   const newGroups = groups.filter(g => g.owner_id !== Number(userId));
@@ -178,7 +186,11 @@ useEffect(() => {
         {newGroups.length === 0 ? (
           <p className="no-results">No new groups available.</p>
         ) : (
-          newGroups.map(g => renderGroupCard(g, true))
+          newGroups.map(g => (
+            <React.Fragment key={g.id}>
+              {renderGroupCard(g, true)}
+            </React.Fragment>
+          ))
         )}
       </div>
     </div>
