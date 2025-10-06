@@ -8,7 +8,14 @@ const movieVideos = (id) => {
     const movieVidsUrl = `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`
 
     const [movieVids, setMovieVids] = useState({})
-    const [movieVid, setMovieVid] = useState('')
+
+    const getVideo = () => {
+      if(movieVids.results){
+        return movieVids.results[0].site === 'YouTube' ? `https://www.youtube.com/embed/${movieVids.results[0].key}` : ''
+      }
+
+      return ''
+    }
 
     useEffect(() => {
         fetch(movieVidsUrl,
@@ -23,7 +30,6 @@ const movieVideos = (id) => {
             console.log(json)
 
             setMovieVids(json)
-            setMovieVid(json.results[0].site)
           })
           .catch(err => console.log(err))
     }, [])
@@ -31,7 +37,15 @@ const movieVideos = (id) => {
 
     return (
         <div className='movie-vids'>
-            <p>{movieVid}</p>
+          <iframe 
+            width="560" 
+            height="315"
+            src={getVideo()}
+            title="YouTube video player" 
+            frameBorder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowFullScreen>
+          </iframe>
         </div>
     )
 }

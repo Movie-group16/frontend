@@ -31,7 +31,7 @@ function MoviesPage() {
 
   const getCurrentPage = () => {return currentPage > 0 ? currentPage : 1}
 
-  const movieSearchUrl = `https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&page=${getCurrentPage()}`
+  const movieSearchUrl = `https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&primary_release_year=${primaryReleaseYear}&page=${getCurrentPage()}`
   const movieDiscoverUrl = `https://api.themoviedb.org/3/discover/movie?&include_adult=false&include_video=false&language=en-USpage=${getCurrentPage()}&sort_by=popularity.desc`
   const popularUrl = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${getCurrentPage()}`
   const topRatedUrl = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${getCurrentPage()}`
