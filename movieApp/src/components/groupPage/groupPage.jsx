@@ -12,6 +12,11 @@ function GroupPage() {
   const [discussions, setDiscussions] = useState([])
   const [reviews, setReviews] = useState([])
   const [activeTab, setActiveTab] = useState('discussions')
+    const [newPost, setNewPost] = useState({
+    title: '',
+    text: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const userId = localStorage.getItem('userId')
 
   useEffect(() => {
@@ -165,11 +170,73 @@ function GroupPage() {
     }
   }
 
+  const handleCreatePost = async (e) => {
+    e.preventDefault()
+    
+    if (!newPost.title.trim() || !newPost.text.trim()) {
+      alert('Please fill in both title and text')
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      const token = localStorage.getItem('token')
+      await axios.post(`http://localhost:3001/discussions/discussion`, {
+        group_id: group.id,
+        user_id: userId,
+        discussion_title: newPost.title,
+        discussion_text: newPost.text
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      setNewPost({ title: '', text: '' })
+      
+      fetchDiscussions()
+      
+      alert('Post created successfully!')
+    } catch (error) {
+      console.error('Error creating post:', error)
+      alert('Failed to create post')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'discussions':
         return (
           <div className="discussions-list">
+            <div className="create-post-container">
+              <form onSubmit={handleCreatePost} className="create-post-form">
+                <input
+                  type="text"
+                  placeholder="Write a title for your post..."
+                  value={newPost.title}
+                  onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+                  className="post-title-input"
+                  disabled={isSubmitting}
+                />
+                <textarea
+                  placeholder="Write a post..."
+                  value={newPost.text}
+                  onChange={(e) => setNewPost({ ...newPost, text: e.target.value })}
+                  className="post-text-input"
+                  rows="4"
+                  disabled={isSubmitting}
+                />
+                <button 
+                  type="submit" 
+                  className="post-submit-btn"
+                  disabled={isSubmitting || !newPost.title.trim() || !newPost.text.trim()}
+                >
+                  {isSubmitting ? 'Posting...' : 'Post'}
+                </button>
+              </form>
+            </div>
             {discussions.length === 0 ? (
               <div className="no-discussions">
                 <p>No discussions yet. Be the first to start one!</p>
