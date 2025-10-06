@@ -80,7 +80,7 @@ function DiscussionPage({ token }) {
 
   const handleLikeComment = async (commentId) => {
     try {
-      await axios.put(`http://localhost:3001/comment/${commentId}/like`, {
+      await axios.put(`http://localhost:3001/discussions/comment/${commentId}/like`, {
         userId: userId,
         action: 'like'
       }, {
@@ -96,7 +96,7 @@ function DiscussionPage({ token }) {
 
   const handleDislikeComment = async (commentId) => {
     try {
-      await axios.put(`http://localhost:3001/comment/${commentId}/dislike`, {
+      await axios.put(`http://localhost:3001/discussions/comment/${commentId}/dislike`, {
         userId: userId,
         action: 'dislike'
       }, {
