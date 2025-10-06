@@ -181,6 +181,12 @@ function GroupPage() {
     setIsSubmitting(true)
     try {
       const token = localStorage.getItem('token')
+      const userId = localStorage.getItem('userId')
+      const response = await axios.get(`http://localhost:3001/groups/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       await axios.post(`http://localhost:3001/discussions/discussion/create`, {
         group_id: group.id,
         user_id: userId,
@@ -195,8 +201,6 @@ function GroupPage() {
       setNewPost({ title: '', text: '' })
       
       fetchDiscussions()
-      
-      alert('Post created successfully!')
     } catch (error) {
       console.error('Error creating post:', error)
       alert('Failed to create post')
