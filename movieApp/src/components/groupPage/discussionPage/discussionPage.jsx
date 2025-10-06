@@ -116,7 +116,7 @@ function DiscussionPage({ token }) {
 
     setSubmitting(true)
     try {
-      await axios.post(`http://localhost:3001/comment/create`, {
+      await axios.post(`http://localhost:3001/discussions/comment/create`, {
         discussion_id: id,
         userId: userId,
         comment_text: newComment
