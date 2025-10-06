@@ -78,31 +78,6 @@ function DiscussionPage({ token }) {
     }
   }
 
-  const submitComment = async (e) => {
-    e.preventDefault()
-    if (!newComment.trim()) return
-
-    setSubmitting(true)
-    try {
-      await axios.post(`http://localhost:3001/discussion/${id}/comments`, {
-        comment_text: newComment,
-        user_id: userId
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      
-      setNewComment('')
-      fetchComments() // Refresh comments
-    } catch (error) {
-      console.error('Error submitting comment:', error)
-      alert('Failed to submit comment')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
   const handleLikeComment = async (commentId) => {
     try {
       await axios.put(`http://localhost:3001/comment/${commentId}/like`, {
@@ -135,6 +110,32 @@ function DiscussionPage({ token }) {
     }
   }
 
+  const submitComment = async (e) => {
+    e.preventDefault()
+    if (!newComment.trim()) return
+
+    setSubmitting(true)
+    try {
+      await axios.post(`http://localhost:3001/comment/create`, {
+        discussion_id: id,
+        userId: userId,
+        comment_text: newComment
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      
+      setNewComment('')
+      fetchComments()
+    } catch (error) {
+      console.error('Error submitting comment:', error)
+      alert('Failed to submit comment')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   if (loading) return <div className="discussion-page">Loading discussion...</div>
   if (!discussion) return <div className="discussion-page">Discussion not found</div>
 
@@ -144,7 +145,6 @@ function DiscussionPage({ token }) {
         ← Back to Group
       </button>
 
-      {/* Main Discussion Post */}
       <div className="main-discussion-post">
         <div className="post-header">
           <h1 className="discussion-title">{discussion.discussion_title}</h1>
@@ -172,31 +172,25 @@ function DiscussionPage({ token }) {
           <span className="comment-count">{comments.length} comments</span>
         </div>
       </div>
-
-      {/* Comment Form */}
-      {token && (
-        <div className="comment-form-container">
-          <form onSubmit={submitComment} className="comment-form">
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Add a comment..."
-              className="comment-input"
-              rows="3"
-              disabled={submitting}
-            />
-            <button 
-              type="submit" 
-              className="submit-comment-btn"
-              disabled={submitting || !newComment.trim()}
-            >
-              {submitting ? 'Posting...' : 'Post Comment'}
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* Comments Section */}
+      <div className="create-post-container">
+        <form onSubmit={submitComment} className="create-post-form">
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Write a comment..."
+            className="post-text-input"
+            rows="4"
+            disabled={submitting}
+          />
+          <button 
+            type="submit" 
+            className="post-submit-btn"
+            disabled={submitting || !newComment.trim()}
+          >
+            {submitting ? 'Posting...' : 'Post Comment'}
+          </button>
+        </form>
+      </div>
       <div className="comments-section">
         <h3 className="comments-header">Comments ({comments.length})</h3>
         

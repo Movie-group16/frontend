@@ -181,7 +181,7 @@ function GroupPage() {
     setIsSubmitting(true)
     try {
       const token = localStorage.getItem('token')
-      await axios.post(`http://localhost:3001/discussions/discussion`, {
+      await axios.post(`http://localhost:3001/discussions/discussion/create`, {
         group_id: group.id,
         user_id: userId,
         discussion_title: newPost.title,
