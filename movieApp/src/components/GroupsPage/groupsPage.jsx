@@ -63,7 +63,7 @@ function GroupsPage() {
       status: 'pending'
     });
 
-    setJoinRequests(prev => [...prev, groupId])
+    setPendingRequests(prev => [...prev, groupId])
 
     alert('Join request sent!');
   } catch (err) {
@@ -103,14 +103,14 @@ useEffect(() => {
       <p><strong>Rules:</strong> {group.group_rules}</p>
 
       {showJoin && !isOwner && (
-  pendingRequests.includes(group.id) ? (
-    <button className="request-sent-btn" disabled>Request Sent</button>
-  ) : (
-    <button className="join-btn" onClick={() => sendJoinRequest(group.id)}>
-      Send Join Request
-    </button>
-  )
-)}
+        pendingRequests.includes(group.id) ? (
+          <button className="request-sent-btn" disabled>Request Sent</button>
+        ) : (
+          <button className="join-btn" onClick={() => sendJoinRequest(group.id)}>
+            Send Join Request
+          </button>
+        )
+      )}
 
       {isOwner && (
         <div>
