@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './friendsPage.css'
-import { useNavigate } from 'react-router-dom'
 
 function FriendsPage() {
-  const navigate = useNavigate()
-
   const [activeTab, setActiveTab] = useState('search')
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResult, setSearchResult] = useState(null)
@@ -18,27 +15,19 @@ function FriendsPage() {
   const [friendshipStatus, setFriendshipStatus] = useState({})
 
   const userId = localStorage.getItem('userId')
-  const token = useState(localStorage.getItem("token"))
-
 
   useEffect(() => {
     if (activeTab === 'friends') {
       fetchFriends()
     } else if (activeTab === 'requests') {
-      setLoading(true)
-      Promise.all([fetchFriendRequests(), fetchSentRequests()])
-        .finally(() => setLoading(false))
+      fetchFriendRequests()
     }
   }, [activeTab])
 
   const fetchFriends = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`http://localhost:3001/friends?userId=${userId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+      const response = await axios.get(`http://localhost:3001/friends?userId=${userId}`)
       setFriends(response.data.friends || [])
     } catch (error) {
       console.error('Error fetching friends:', error)
@@ -50,31 +39,10 @@ function FriendsPage() {
   const fetchFriendRequests = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`http://localhost:3001/friends/requests?userId=${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const response = await axios.get(`http://localhost:3001/friends/requests?userId=${userId}`)
       setFriendRequests(response.data.requests || [])
     } catch (error) {
       console.error('Error fetching friend requests:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-  
-  const fetchSentRequests = async () => {
-    setLoading(true)
-    try {
-      const response = await axios.get(`http://localhost:3001/friends/sent?userId=${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      console.log('Sent requests response:', response.data)
-      setSentRequests(response.data.sent_requests || response.data.requests || [])
-    } catch (error) {
-      console.error('Error fetching sent requests:', error)
     } finally {
       setLoading(false)
     }
@@ -91,11 +59,7 @@ function FriendsPage() {
     setIsSearching(true)
     setHasSearched(true)
     try {
-      const response = await axios.get(`http://localhost:3001/user/${searchTerm}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const response = await axios.get(`http://localhost:3001/user/${searchTerm}`)
       const users = response.data || []
       const foundUser = users.length > 0 ? users[0] : null
       setSearchResult(foundUser)
@@ -112,11 +76,7 @@ function FriendsPage() {
 
   const checkFriendshipStatus = async (friendId) => {
     try {
-      const response = await axios.get(`http://localhost:3001/friends/status/${friendId}?userId=${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const response = await axios.get(`http://localhost:3001/friends/status/${friendId}?userId=${userId}`)
       
       setFriendshipStatus(prev => ({
         ...prev,
@@ -132,11 +92,7 @@ function FriendsPage() {
 
   const addFriend = async (friendId) => {
     try {
-      await axios.post('http://localhost:3001/friends/request', {userId, friendId}, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      await axios.post('http://localhost:3001/friends/request', {userId, friendId})
       setFriendshipStatus(prev => ({
         ...prev,
         [friendId]: 'pending'
@@ -150,11 +106,7 @@ function FriendsPage() {
 
   const acceptFriendRequest = async (friendId) => {
     try {
-      await axios.put(`http://localhost:3001/friends/accept/${friendId}`, { userId }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      await axios.put(`http://localhost:3001/friends/accept/${friendId}`, { userId })
       setFriendshipStatus(prev => ({
         ...prev,
         [friendId]: 'friends'
@@ -168,11 +120,7 @@ function FriendsPage() {
 
   const rejectFriendRequest = async (friendId) => {
     try {
-      await axios.put(`http://localhost:3001/friends/reject/${friendId}`, { userId }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      await axios.put(`http://localhost:3001/friends/reject/${friendId}`, { userId })
       setFriendshipStatus(prev => ({
         ...prev,
         [friendId]: 'not_friends'
@@ -184,31 +132,9 @@ function FriendsPage() {
     }
   }
 
-  const cancelFriendRequest = async (friendId) => {
-    try {
-      await axios.put(`http://localhost:3001/friends/cancel/${friendId}`, { userId }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      setFriendshipStatus(prev => ({
-        ...prev,
-        [friendId]: 'not_friends'
-      }))
-      fetchSentRequests() 
-    } catch (error) {
-      console.error('Error rejecting friend request:', error)
-      alert('Failed to reject friend request')
-    }
-  }
-
   const removeFriend = async (friendId) => {
     try {
-      await axios.delete(`http://localhost:3001/friends/remove/${friendId}`, { data: { userId } }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      await axios.delete(`http://localhost:3001/friends/remove/${friendId}`, { data: { userId } })
       fetchFriends() 
     } catch (error) {
       console.error('Error removing friend:', error)
@@ -297,12 +223,6 @@ function FriendsPage() {
                     {searchResult.user_desc && <p>Bio: {searchResult.user_desc}</p>}
                     <div className="profile-actions">
                       {renderFriendshipButton(searchResult)}
-                      <button 
-                        className="go-to-profile-btn"
-                        onClick={() => navigate(`/profile/${searchResult.id}`)}
-                      >
-                        Go to Profile
-                      </button>
                     </div>
                   </div>
                 ) : (
@@ -347,78 +267,44 @@ function FriendsPage() {
             )}
           </div>
         )
-        case 'requests':
-          return (
-            <div className="friends-content single-column">
-              {loading ? (
-                <p>Loading friend requests...</p>
-              ) : (
-                <div className="requests-container">
-                  {/* Received Requests */}
-                  <div className="requests-column">
-                    <h4 className="section-title">Received Requests</h4>
-                    {friendRequests.length === 0 ? (
-                      <p className="no-requests">No received requests</p>
-                    ) : (
-                      <div className="requests-list">
-                        {friendRequests.map(request => (
-                          <div key={`received-${request.id}`} className="request-card">
-                            <div className="request-info">
-                              <h4>{request.username}</h4>
-                              <p>Email: {request.email}</p>
-                              <p className="requested-at">Requested: {new Date(request.requested_at).toLocaleDateString()}</p>
-                            </div>
-                            <div className="request-actions">
-                              <button 
-                                className="accept-btn"
-                                onClick={() => acceptFriendRequest(request.id)}
-                              >
-                                Accept
-                              </button>
-                              <button 
-                                className="reject-btn"
-                                onClick={() => rejectFriendRequest(request.id)}
-                              >
-                                Reject
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
 
-                  {/* Sent Requests */}
-                  <div className="requests-column">
-                    <h4 className="section-title">Sent Requests</h4>
-                    {sentRequests.length === 0 ? (
-                      <p className="no-requests">No sent requests</p>
-                    ) : (
-                      <div className="requests-list">
-                        {sentRequests.map(request => (
-                          <div key={`sent-${request.id}`} className="request-card">
-                            <div className="request-info">
-                              <h4>{request.username}</h4>
-                              <p>Email: {request.email}</p>
-                              <p className="requested-at">Sent: {new Date(request.sent_at).toLocaleDateString()}</p>
-                            </div>
-                            <div className="request-actions">
-                              <button 
-                                className="reject-btn"
-                                onClick={() => cancelFriendRequest(request.id)}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+      case 'requests':
+        return (
+          <div className="friends-content single-column">
+            <h3>Friend Requests</h3>
+            {loading ? (
+              <p>Loading friend requests...</p>
+            ) : friendRequests.length === 0 ? (
+              <p>No pending friend requests.</p>
+            ) : (
+              <div className="requests-list">
+                {friendRequests.map(request => (
+                  <div key={request.id} className="request-card">
+                    <div className="request-info">
+                      <h4>{request.username}</h4>
+                      <p>Email: {request.email}</p>
+                      <p className="requested-at">Requested: {new Date(request.requested_at).toLocaleDateString()}</p>
+                    </div>
+                    <div className="request-actions">
+                      <button 
+                        className="accept-btn"
+                        onClick={() => acceptFriendRequest(request.id)}
+                      >
+                        Accept
+                      </button>
+                      <button 
+                        className="reject-btn"
+                        onClick={() => rejectFriendRequest(request.id)}
+                      >
+                        Reject
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          )
+                ))}
+              </div>
+            )}
+          </div>
+        )
 
       default:
         return null

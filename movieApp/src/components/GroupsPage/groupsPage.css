@@ -1,0 +1,131 @@
+.groups-page {
+  min-height: 100vh;
+  background: #242424;
+  color: #fff;
+  padding: 2em;
+}
+
+.groups-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  margin-bottom: 2em;
+}
+
+.nav-btn {
+  padding: 0.8em 1.5em;
+  border: 2px solid #888;
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-btn:hover {
+  background: #555;
+  border-color: #646cff;
+}
+
+.nav-btn.active {
+  background: #646cff;
+  border-color: #646cff;
+  color: #fff;
+}
+
+.create-group-container {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.create-group-btn {
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  border: 2px solid #44cc44;
+  background: #44cc44;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.create-group-btn:hover {
+  background: #33aa33;
+  border-color: #33aa33;
+}
+
+.groups-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.search-section {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.search-input {
+  padding: 0.6em 1em;
+  border-radius: 8px;
+  border: 2px solid #888;
+  background: #333;
+  color: #fff;
+  font-size: 1em;
+  outline: none;
+  width: 300px;
+}
+
+.search-input:focus {
+  border-color: #646cff;
+}
+
+.group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
+}
+
+.group-card {
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 1.5em;
+  width: 100%;
+  max-width: 500px;
+}
+
+.group-card p {
+  margin: 0.3em 0;
+}
+
+.join-btn {
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  border: 1px solid #44cc44;
+  background: #44cc44;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 0.5em;
+}
+
+.join-btn:hover {
+  background: #33aa33;
+  border-color: #33aa33;
+}
+
+.owner-label, .member-label {
+  margin-top: 0.5em;
+  font-style: italic;
+  color: #aaa;
+}
+
+.no-results, .no-search-text {
+  text-align: center;
+  color: #ccc;
+  font-size: 1.1em;
+}
+

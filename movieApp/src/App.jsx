@@ -9,6 +9,7 @@ import { useState } from 'react'
 import ShowtimesPage from './components/ShowtimesPage/showtimesPage.jsx'
 import ProfilePage from './components/ProfilePage/profilePage.jsx'
 import GroupsPage from './components/GroupsPage/groupsPage.jsx'
+import CreateGroupPage from './components/GroupsPage/createGroupPage.jsx'
 import FriendsPage from './components/FriendsPage/friendsPage.jsx'
 import FavouritesPage from './components/FavouritesPage/favouritesPage.jsx'
 import RegistrationPage from './components/RegistrationPage/registrationPage.jsx'
@@ -32,11 +33,13 @@ function App() {
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/groups" element={<GroupsPage />} />
         <Route path="/groups/:id" element={<GroupPage />} />
+        <Route path="/groups/create" element={<CreateGroupPage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/favourites/:id" element={<FavouritesPage />} />
         <Route path="/movie/:id" element={<MovieScreen token={token}/>} />
         <Route path="/discussions/discussion/:id" element={<DiscussionPage />} />
         <Route path="/group-reviews" element={<GroupReviews />} />
+        <Route path="/reviews/:id" element={<ReviewPage />} />
       </Routes>
       {location.pathname !== '/login' && location.pathname !== '/register' && (
         <BottomPanel token={token} />
