@@ -33,6 +33,7 @@ function App() {
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/favourites/:id" element={<FavouritesPage />} />
         <Route path="/movie/:id" element={<MovieScreen token={token}/>} />
+        <Route path="/reviews/:id" element={<ReviewPage />} />
       </Routes>
       {location.pathname !== '/login' && location.pathname !== '/register' && (
         <BottomPanel token={token} />
