@@ -17,6 +17,9 @@ function GroupPage({ token }) {
     text: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [confirmAction, setConfirmAction] = useState(null)
+  const [confirmMessage, setConfirmMessage] = useState('')
   const userId = localStorage.getItem('userId')
 
   useEffect(() => {
@@ -126,23 +129,6 @@ function GroupPage({ token }) {
     }
   }
 
-  const leaveGroup = async () => {
-    if (confirm('Are you sure you want to leave this group?')) {
-      try {
-        const token = localStorage.getItem('token')
-        await axios.delete(`http://localhost:3001/groups/${id}/leave`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        navigate('/groups')
-      } catch (error) {
-        console.error('Error leaving group:', error)
-        alert('Failed to leave group')
-      }
-    }
-  }
-
   const handleLikeDiscussion = async (discussionId) => {
     try {
       const response = await fetch(`http://localhost:3001/discussions/discussion/${discussionId}/like`, {
@@ -216,6 +202,63 @@ function GroupPage({ token }) {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const deleteGroup = async () => {
+    setConfirmMessage('Are you sure you want to delete this group? This action cannot be undone and will remove all discussions and members.')
+    setConfirmAction(() => async () => {
+      try {
+        const token = localStorage.getItem('token')
+        await axios.delete(`http://localhost:3001/groups/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          data: {
+            userId: parseInt(userId)
+          }
+        })
+        
+        navigate('/groups')
+      } catch (error) {
+        console.error('Error deleting group:', error)
+        alert('Failed to delete group')
+      }
+    })
+    setShowConfirmModal(true)
+  }
+
+  const leaveGroup = async () => {
+      setConfirmMessage('Are you sure you want to leave this group?')
+      setConfirmAction(() => async () => {
+          try {         
+              await axios.delete(`http://localhost:3001/groups/${id}/leave`, {
+                  data: { userId }, 
+                  headers: {
+                      Authorization: `Bearer ${token}`
+                  }
+              })
+              navigate('/groups')
+          } catch (error) {
+              console.error('Error leaving group:', error)
+              alert('Failed to leave group')
+          }
+      })
+      setShowConfirmModal(true)
+  }
+
+  const handleConfirm = async () => {
+    if (confirmAction) {
+      await confirmAction()
+    }
+    setShowConfirmModal(false)
+    setConfirmAction(null)
+    setConfirmMessage('')
+  }
+
+  const handleCancel = () => {
+    setShowConfirmModal(false)
+    setConfirmAction(null)
+    setConfirmMessage('')
   }
 
   const renderTabContent = () => {
@@ -318,6 +361,22 @@ function GroupPage({ token }) {
 
   return (
     <div className="group-page">
+      {showConfirmModal && (
+        <div className="modal-overlay">
+          <div className="confirmation-modal">
+            <h3>Confirm Action</h3>
+            <p>{confirmMessage}</p>
+            <div className="modal-buttons">
+              <button className="cancel-btn" onClick={handleCancel}>
+                Cancel
+              </button>
+              <button className="confirm-btn" onClick={handleConfirm}>
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="group-layout">
         <div className="page-information">
           <div className="group-avatar">
@@ -359,9 +418,16 @@ function GroupPage({ token }) {
             <button className="back-btn" onClick={() => navigate('/groups')}>
               View members
             </button>
-            <button className="back-btn" onClick={leaveGroup}>
-              Leave group
-            </button>
+            
+            {isOwner ? (
+              <button className="back-btn" onClick={deleteGroup}>
+                Delete Group
+              </button>
+            ) : (
+              <button className="leave-group-btn" onClick={leaveGroup}>
+                Leave Group
+              </button>
+            )}
           </div>
         </div>
 
