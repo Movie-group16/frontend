@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './groupPage.css'
 
-function GroupPage() {
+function GroupPage({ token }) {
   const { id } = useParams()
   const navigate = useNavigate()
   const [group, setGroup] = useState(null)
@@ -88,7 +88,20 @@ function GroupPage() {
               }
           })
           discussion.username = userResponse.data.username || 'Unknown'
+
+          try {
+            const commentsResponse = await axios.get(`http://localhost:3001/discussions/discussion/${discussion.id}/comments`, {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            })
+            discussion.comment_count = commentsResponse.data.length
+          } catch (error) {
+            console.error('Error fetching comments for discussion:', discussion.id, error)
+            discussion.comment_count = 0
+          }
         }
+        
         setDiscussions(discussionData)
     } catch (error) {
         console.error('Error fetching discussions:', error)
@@ -122,8 +135,6 @@ function GroupPage() {
             Authorization: `Bearer ${token}`
           }
         })
-        
-        alert('Successfully left the group!')
         navigate('/groups')
       } catch (error) {
         console.error('Error leaving group:', error)
@@ -132,41 +143,39 @@ function GroupPage() {
     }
   }
 
-  const handleLike = async (discussionId) => {
+  const handleLikeDiscussion = async (discussionId) => {
     try {
-      const token = localStorage.getItem('token')
-      await axios.put(`http://localhost:3001/comment/${discussionId}/like`, {
-        userId: userId,
-        action: 'like'
-      }, {
+      const response = await fetch(`http://localhost:3001/discussions/discussion/${discussionId}/like`, {
+        method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: parseInt(userId) })
       })
-      
+      const data = await response.json()
+
       fetchDiscussions()
     } catch (error) {
       console.error('Error liking discussion:', error)
-      alert('Failed to like discussion')
     }
   }
 
-  const handleDislike = async (discussionId) => {
+  const handleDislikeDiscussion = async (discussionId) => {
     try {
-      const token = localStorage.getItem('token')
-      await axios.put(`http://localhost:3001/comment/${discussionId}/dislike`, {
-        userId: userId,
-        action: 'dislike'
-      }, {
+      const response = await fetch(`http://localhost:3001/discussions/discussion/${discussionId}/dislike`, {
+        method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: parseInt(userId) })
+      })   
+      const data = await response.json()
+
       fetchDiscussions()
     } catch (error) {
       console.error('Error disliking discussion:', error)
-      alert('Failed to dislike discussion')
     }
   }
 
@@ -261,13 +270,13 @@ function GroupPage() {
                     <div className="likes-dislikes">
                       <button 
                         className="like-btn"
-                        onClick={() => handleLike(discussion.id)}
+                        onClick={() => handleLikeDiscussion(discussion.id)}
                       >
                         👍 {discussion.likes || 0}
                       </button>
                       <button 
                         className="dislike-btn"
-                        onClick={() => handleDislike(discussion.id)}
+                        onClick={() => handleDislikeDiscussion(discussion.id)}
                       >
                         👎 {discussion.dislikes || 0}
                       </button>
@@ -279,6 +288,7 @@ function GroupPage() {
                       Go to Discussion
                     </button>
                   </div>
+                  <span className="comment-count">{discussion.comment_count || 0} comments</span>
                 </div>
               ))
             )}

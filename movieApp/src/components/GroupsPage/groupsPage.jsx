@@ -117,7 +117,7 @@ useEffect(() => {
           <p className="owner-label">(You are the owner)</p>
           <button 
             className="go-to-group-btn" 
-            onClick={() => navigate(`/groups/${group.group_id}`)}
+            onClick={() => navigate(`/groups/${group.id}`)}
           >
             Go to Group
           </button>
