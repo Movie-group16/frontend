@@ -10,6 +10,7 @@ import { FaStar } from "react-icons/fa6";
 import axios from 'axios';
 import movieVideos from './movieVideos'
 import reviewShowcase from './reviewShowcase';
+import similiarMovies from './similiarMovies';
 
 function MovieScreen( {token} ) {
     
@@ -24,6 +25,7 @@ function MovieScreen( {token} ) {
 
     const [movieDetails, setMovieDetails] = useState({})
     const [reviewText, setReviewText] = useState("")
+    const [reviewTitle, setReviewTitle] = useState('')
     //max review score is 5. Shown with stars...
     const [reviewScore, setReviewScore] = useState(0)
     const [isFavourite, setIsFavourite] = useState(false)
@@ -95,32 +97,6 @@ function MovieScreen( {token} ) {
       return (rating * 1).toFixed(1)
     }
 
-    const handleReview = async (e) => {
-      e.preventDefault()
-
-      //here try to submit review..
-      console.log("review should")
-      console.log(`${localStorage.getItem('userId')} is user id`)
-      try{
-        const response = await axios.post(`${url}/reviews/`, {
-
-          review:{
-            user_id: localStorage.getItem('userId'),
-            movie_id: movieId,
-            review_text: reviewText,
-            rating: reviewScore
-          }
-        })
-
-        console.log(response)
-
-        setHasReview(true)
-      }
-      catch (error){
-          alert(error.response?.data?.message || "can't post review")
-      }
-
-    }
 
     const handleFavourite = async (e) => {
       e.preventDefault()   
@@ -200,8 +176,9 @@ function MovieScreen( {token} ) {
             <div className='videos'>
               {movieVideos(movieId)}
             </div>
-            <div className='similiarMovies'>
-
+            <div className='similiar-movies'>
+              <h3>Similiar Movies</h3>
+              {similiarMovies(movieId)}
             </div>
           </div>
         </div>

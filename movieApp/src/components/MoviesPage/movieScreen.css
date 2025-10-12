@@ -105,10 +105,18 @@
 
 .review-input {
 
-    padding: 0 0 10vh;
+    padding: 0em 0em 8em 0em;
     width: 100%;
     margin-left: 1em;
     
+    margin-bottom: 1em;
+    text-align: left;
+}
+
+.review-title-input {
+    padding: 0.5em 0em 0.5em 0em;
+    width: 100%;
+    margin-left: 1em;
     margin-bottom: 1em;
     text-align: left;
 }
@@ -146,4 +154,12 @@
     padding-bottom: 5px;
     font-size: larger;
     font-style: italic;
+}
+
+.review-title-showcase {
+    padding: 0.5em 0em 0.5em 0em;
+    width: 100%;
+    margin-left: 1em;
+    margin-bottom: 1em;
+    text-align: left;
 }

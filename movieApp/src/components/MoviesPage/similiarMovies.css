@@ -1,0 +1,16 @@
+.similiar-movies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.similiar-movie {
+  width: 150px;
+  border: 2px solid #888;
+  border-radius: 6px;
+  overflow: hidden;
+  text-align: center;
+  background: none;
+}
