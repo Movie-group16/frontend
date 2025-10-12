@@ -20,8 +20,7 @@ function RegistrationPage() {
           user_desc: ''
         }
       })
-      setMessage('Registration successful!')
-      setTimeout(() => navigate('/login'), 1500)
+      navigate('/login')
     } catch (err) {
       setMessage(err.response?.data?.message || 'Registration failed')
     }
