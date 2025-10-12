@@ -10,7 +10,6 @@ function GroupPage({ token }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [discussions, setDiscussions] = useState([])
-  const [reviews, setReviews] = useState([])
   const [activeTab, setActiveTab] = useState('discussions')
     const [newPost, setNewPost] = useState({
     title: '',
@@ -338,11 +337,11 @@ function GroupPage({ token }) {
           </div>
         )
 
-      case 'reviews':
+      case 'movies':
         return (
-          <div className="reviews-list">
-            <div className="no-reviews">
-              <p>Reviews feature not implemented yet.</p>
+          <div>
+            <div>
+              <p>Group movies feature is not implemented yet.</p>
             </div>
           </div>
         )
@@ -441,9 +440,9 @@ function GroupPage({ token }) {
             </button>
             <button 
               className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
-              onClick={() => setActiveTab('reviews')}
+              onClick={() => setActiveTab('movies')}
             >
-              Reviews
+              Movies
             </button>
           </div>
 
