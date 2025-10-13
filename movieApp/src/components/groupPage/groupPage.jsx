@@ -431,7 +431,7 @@ function GroupPage({ token }) {
         </div>
 
         <div className="discussions-container">
-          <div className="tab-navigation">
+          <div>
             <button 
               className={`tab-btn ${activeTab === 'discussions' ? 'active' : ''}`}
               onClick={() => setActiveTab('discussions')}
