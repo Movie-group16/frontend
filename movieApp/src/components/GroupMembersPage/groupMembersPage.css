@@ -1,0 +1,178 @@
+.group-members-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background: #242424;
+  min-height: 100vh;
+}
+
+.group-members-page h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.tab-navigation button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #555;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.tab-navigation button.active {
+  background-color: #646cff;
+}
+
+.tab-navigation button:hover:not(.active) {
+  background-color: #777;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 80%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 2px solid #888;
+  background: #333;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #646cff;
+}
+
+.member-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.member-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #333;
+  border-radius: 8px;
+  border: 1px solid #555;
+}
+
+.member-item span {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.member-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.member-item button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.member-item button:hover {
+  opacity: 0.9;
+}
+
+.remove-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.remove-btn:hover {
+  background-color: #c82333;
+}
+
+.view-profile-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.view-profile-btn:hover {
+  background-color: #0069d9;
+}
+
+.accept-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.accept-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #e00000;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #e00000;
+}
+
+.send-invite-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.send-invite-btn:hover {
+  background-color: #138496;
+}
+
+.send-invite-btn:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.back-btn {
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  border: 1px solid #646cff;
+  background: #646cff;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block; 
+  font-weight: 500;
+  margin-top: 0.6em;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background: #4f55ff;
+}
+
+.back-btn-container {
+  text-align: center; 
+}
+
+.back-btn:active {
+  transform: scale(0.98);
+}

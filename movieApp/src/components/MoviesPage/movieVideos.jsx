@@ -11,7 +11,16 @@ const movieVideos = (id) => {
 
     const getVideo = () => {
       if(movieVids.results){
-        return movieVids.results[0].site === 'YouTube' ? `https://www.youtube.com/embed/${movieVids.results[0].key}` : ''
+        if(movieVids.results.length === 0) return ''
+        else{
+          try{
+            return movieVids.results[0].site === 'YouTube' ? `https://www.youtube.com/embed/${movieVids.results[0].key}` : ''
+          }
+          catch(err){
+            return ''
+          }
+        }
+        
       }
 
       return ''
@@ -37,15 +46,21 @@ const movieVideos = (id) => {
 
     return (
         <div className='movie-vids'>
-          <iframe 
-            width="560" 
-            height="315"
-            src={getVideo()}
-            title="YouTube video player" 
-            frameBorder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowFullScreen>
-          </iframe>
+          {
+            getVideo() === '' ? <p>No videos available</p> 
+            : 
+            (
+              <iframe 
+              width="560" 
+              height="315"
+              src={getVideo()}
+              title="YouTube video player" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowFullScreen>
+              </iframe>
+            )
+          }
         </div>
     )
 }

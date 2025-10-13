@@ -1,0 +1,16 @@
+.movie-pics{
+    width: 600px;
+    overflow: auto;
+    white-space: nowrap;
+    padding: 1em 0em 1em 1em;
+}
+
+.movie-pics img{
+    height: 150px;
+    margin-right: 1em;
+    border-radius: 0.5em;
+}
+
+.movie-pics img:hover{
+    height: 170px;
+}

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useState, useRef } from 'react'
 import ReactPaginate from 'react-paginate'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 function MoviesPage() {
 
@@ -98,7 +98,11 @@ function MoviesPage() {
         <form onSubmit={handleSubmit}>
           <div className="movies-page-container">
           <h3>Movies Page</h3>
+          
           <div className="movies-page-search">
+            <div className='searchIcon'>
+              <FaMagnifyingGlass />
+            </div>
             <input
               type="text"
               placeholder="Search"

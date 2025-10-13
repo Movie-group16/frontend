@@ -15,8 +15,9 @@ import FavouritesPage from './components/FavouritesPage/favouritesPage.jsx'
 import RegistrationPage from './components/RegistrationPage/registrationPage.jsx'
 import ReviewPage from './components/ReviewPage/reviewPage.jsx'
 import GroupPage from './components/groupPage/groupPage.jsx'
+import GroupMembersPage from './components/GroupMembersPage/groupMembersPage.jsx';
 import DiscussionPage from './components/groupPage/discussionPage/discussionPage.jsx'
-import GroupReviews from './components/groupPage/groupReviews/groupReviews.jsx'
+import GroupMovies from './components/groupPage/groupMovies/groupMovies.jsx'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "")
@@ -34,11 +35,12 @@ function App() {
         <Route path="/groups" element={<GroupsPage />} />
         <Route path="/groups/:id" element={<GroupPage />} />
         <Route path="/groups/create" element={<CreateGroupPage />} />
+        <Route path="/groups/:id/members" element={<GroupMembersPage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/favourites/:id" element={<FavouritesPage />} />
         <Route path="/movie/:id" element={<MovieScreen token={token}/>} />
         <Route path="/discussions/discussion/:id" element={<DiscussionPage />} />
-        <Route path="/group-reviews" element={<GroupReviews />} />
+        <Route path="/group-reviews" element={<GroupMovies />} />
         <Route path="/reviews/:id" element={<ReviewPage />} />
       </Routes>
       {location.pathname !== '/login' && location.pathname !== '/register' && (
