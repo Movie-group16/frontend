@@ -7,7 +7,7 @@ import axios from 'axios'
 function FavouritesPage() {
   const [favourites, setFavourites] = useState([])
   const [loading, setLoading] = useState(true)
-  const userId = localStorage.getItem('userId')
+  const userId = location.pathname.split("/").pop();
   const tmdbApiKey = import.meta.env.VITE_TMDB_API_KEY
   const backendUrl = 'http://localhost:3001'
   const navigate = useNavigate()
