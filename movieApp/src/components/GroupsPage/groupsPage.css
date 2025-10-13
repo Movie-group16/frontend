@@ -96,36 +96,118 @@
   padding: 1.5em;
   width: 100%;
   max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .group-card p {
   margin: 0.3em 0;
 }
 
-.join-btn {
-  padding: 0.5em 1em;
-  border-radius: 6px;
-  border: 1px solid #44cc44;
-  background: #44cc44;
-  color: #fff;
-  cursor: pointer;
-  margin-top: 0.5em;
-}
-
-.join-btn:hover {
-  background: #33aa33;
-  border-color: #33aa33;
-}
-
-.owner-label, .member-label {
+.owner-label,
+.member-label {
   margin-top: 0.5em;
   font-style: italic;
   color: #aaa;
 }
 
-.no-results, .no-search-text {
+.invited-label {
+  color: #17a2b8;
+  font-weight: bold;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.no-results,
+.no-search-text {
   text-align: center;
   color: #ccc;
   font-size: 1.1em;
 }
 
+.group-actions {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.invite-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.8em;
+  margin-top: 1em;
+}
+
+.send-join-btn {
+  background-color: #007bff; 
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.send-join-btn:hover {
+  background-color: #0056b3;
+}
+
+.join-request-sent-btn {
+  background-color: #343a40;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: not-allowed;
+}
+
+.invite-accept-btn {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.invite-accept-btn:hover {
+  background-color: #218838;
+}
+
+.invite-decline-btn {
+  background-color: #dc3545; 
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.invite-decline-btn:hover {
+  background-color: #c82333;
+}
+
+.go-to-group-btn {
+  padding: 0.5em 1em;
+  border-radius: 6px;
+  border: 1px solid #646cff;
+  background: #646cff;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 0.6em;
+  transition: all 0.2s;
+}
+
+.go-to-group-btn:hover {
+  background: #4f55ff;
+}
+
+.groups-content.single-column .group-card {
+  text-align: left;
+}

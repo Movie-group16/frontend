@@ -414,7 +414,7 @@ function GroupPage({ token }) {
             )}
           </div>
           <div className="buttons">
-            <button className="back-btn" onClick={() => navigate('/groups')}>
+            <button className="back-btn" onClick={() => navigate(`/groups/${id}/members`)}>
               View members
             </button>
             
