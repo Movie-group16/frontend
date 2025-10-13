@@ -123,6 +123,10 @@ useEffect(() => {
     navigate(`/reviews/${userId}`, {state: { user: username, reviews}});
   };
 
+  const goToFavourites = () => {
+    navigate(`/favourites/${userId}`, {state: { user: username, favourites}})
+  };
+
   return (
   <div className='profile'>
       <h1>Profile Page</h1>
@@ -167,7 +171,7 @@ useEffect(() => {
               </li>
           ))}
         </ul>
-        
+        <button onClick={goToFavourites}>All Favourites</button>
       </div>
     </div>
   </div>
