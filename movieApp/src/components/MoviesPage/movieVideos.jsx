@@ -11,7 +11,16 @@ const movieVideos = (id) => {
 
     const getVideo = () => {
       if(movieVids.results){
-        return movieVids.results[0].site === 'YouTube' ? `https://www.youtube.com/embed/${movieVids.results[0].key}` : ''
+        if(movieVids.results.length === 0) return ''
+        else{
+          try{
+            return movieVids.results[0].site === 'YouTube' ? `https://www.youtube.com/embed/${movieVids.results[0].key}` : ''
+          }
+          catch(err){
+            return ''
+          }
+        }
+        
       }
 
       return ''

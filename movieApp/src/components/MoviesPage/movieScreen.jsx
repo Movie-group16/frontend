@@ -11,6 +11,7 @@ import axios from 'axios';
 import movieVideos from './movieVideos'
 import reviewShowcase from './reviewShowcase';
 import similiarMovies from './similiarMovies';
+import MoviePics from './moviePics';
 
 function MovieScreen( {token} ) {
     
@@ -107,82 +108,104 @@ function MovieScreen( {token} ) {
         alert(error.response?.data?.message || "Can't add favourite")
       }
   }
+
+  const additionalInfo = () => {
+    return (
+    <div className='additional-info'>
+      <p>Release Date: {movieDetails.release_date}</p>
+      <p>Rating: {getApproximatedRating(movieDetails.vote_average)} / 10</p>
+      <p>Runtime: {movieDetails.runtime} minutes</p>
+      <p>Budget: {getMoneyInReadableFormat(movieDetails.budget)}</p>
+      <p>Revenue: {getMoneyInReadableFormat(movieDetails.revenue)}</p>
+      <p>Tagline: {movieDetails.tagline}</p>
+      <span>Status: {movieDetails.status}</span>
+      <span id='status separator'> | </span>
+      <span>Adult: {movieDetails.adult ? 'Yes' : 'No'}</span>
+      <div className="homepage-link">
+        {movieDetails.homepage && (
+          <a href={movieDetails.homepage} target="_blank" rel="noopener noreferrer">
+            Official Website
+            </a>
+          )}
+          </div>
+          <div className="production-companies">
+            <p>Production Companies:</p>
+            <div className="production-companies-list">
+              {movieDetails.production_companies && movieDetails.production_companies.map(company => (
+                <div key={company.id} className="production-company">
+                  {company.logo_path ? <img className="company-logo" src={`https://image.tmdb.org/t/p/w200${company.logo_path}`} alt={company.name} /> 
+                  : <div className="no-logo-available">{company.name}</div>}
+                  </div>
+                ))}
+            </div>
+          </div>
+      </div>
+    )
+  }
+
+  const loggedInFeatures = () => {
+    return (
+      token ? (
+      <div className='favourite-and-review'>
+        <form className='favourite' onSubmit={handleFavourite}> 
+           <button
+           className='add-to-favourites-button'
+           type='submit'
+           disabled={isFavourite}
+           >
+            {isFavourite ? 'Added to favourites' : 'Add to favourites'}
+            </button>
+            </form>
+            { reviewShowcase(token) }
+            </div>
+            ) : (
+            <p>Log in to add to favourites</p>
+        )
+    )
+  }
+
     return (
       <div className="movie-screen-container">
         <h2>{movieDetails.title}</h2>
         <div className='poster-and-info'>
-          <div className='movie-poster-container'>
-          {movieDetails.poster_path ? <img className="movie-poster" src={`https://image.tmdb.org/t/p/w300${movieDetails.poster_path}`} alt={movieDetails.title} /> : <div className="no-image-available">No Image Available</div>}
-          </div>
+          
           <div className="movie-details">
-            <p>{movieDetails.overview}</p>
-            <div className="genres-container">
-              <p>Genres: </p>
-              {movieDetails.genres && movieDetails.genres.map(genre => (
-                <span key={genre.id} className="genre-badge">{genre.name} </span>
-              ))}
+            <div className='overview'>
+              <div className='movie-poster-container'>
+              {movieDetails.poster_path ? <img className="movie-poster" src={`https://image.tmdb.org/t/p/w300${movieDetails.poster_path}`} alt={movieDetails.title} /> 
+              : <div className="no-image-available">No Image Available</div>}
+              {additionalInfo()}
             </div>
-            <div className='additional-info'>
-              <p>Release Date: {movieDetails.release_date}</p>
-              <p>Rating: {getApproximatedRating(movieDetails.vote_average)} / 10</p>
-              <p>Runtime: {movieDetails.runtime} minutes</p>
-              <p>Budget: {getMoneyInReadableFormat(movieDetails.budget)}</p>
-              <p>Revenue: {getMoneyInReadableFormat(movieDetails.revenue)}</p>
-              <p>Tagline: {movieDetails.tagline}</p>
-              <span>Status: {movieDetails.status}</span>
-              <span id='status separator'> | </span>
-              <span>Adult: {movieDetails.adult ? 'Yes' : 'No'}</span>
-              <div className="homepage-link">
-                {movieDetails.homepage && (
-                  <a href={movieDetails.homepage} target="_blank" rel="noopener noreferrer">
-                    Official Website
-                  </a>
-                )}
-              </div>
-
-              <div className="production-companies">
-                <p>Production Companies:</p>
-                <div className="production-companies-list">
-                  {movieDetails.production_companies && movieDetails.production_companies.map(company => (
-                    <div key={company.id} className="production-company">
-                      {company.logo_path ? <img className="company-logo" src={`https://image.tmdb.org/t/p/w200${company.logo_path}`} alt={company.name} /> : <div className="no-logo-available">{company.name}</div>}
-                    </div>
+            <div className='overview-and-review'>
+              <p>{movieDetails.overview}</p>
+              <div className="genres-container">
+                  <p>Genres: </p>
+                  {movieDetails.genres && movieDetails.genres.map(genre => (
+                  <span key={genre.id} className="genre-badge">{genre.name} </span>
                   ))}
-                </div>
               </div>
-
               <div className='logged-in-features'>
-                {token ? (
-                  <div className='favourite-and-review'>
-
-                    <form className='favourite' onSubmit={handleFavourite}> 
-                      <button
-                       className='add-to-favourites-button'
-                       type='submit'
-                       disabled={isFavourite}
-                      >
-                        {isFavourite ? 'Added to favourites' : 'Add to favourites'}
-                      </button>
-                    </form>
-                    { reviewShowcase(token) }
-                    
-                </div>
-                ) : (
-                  <p>Log in to add to favourites</p>
-                )}
+                {loggedInFeatures()}
               </div>
-
-            </div>
-            <div className='videos'>
-              {movieVideos(movieId)}
-            </div>
-            <div className='similiar-movies'>
-              <h3>Similiar Movies</h3>
-              {similiarMovies(movieId)}
-            </div>
+              <div className='videos'>
+                {movieVideos(movieId)}
+              </div>
+              <div className='movie-pics-section'>
+              <h3>Movie Pictures</h3>
+              <MoviePics id={movieId}/>
+              </div>
+              
+              
+              
+              <div className='similiar-movies'>
+                <h3>Similiar Movies</h3>
+                {similiarMovies(movieId)}
+              </div>
+              
           </div>
         </div>
-      
+        </div>
+        </div>
         <div className="movie-screen-back-button-container">
           <button className="movie-screen-back-button" onClick={() => window.history.back()}>Go Back</button>
         </div>
