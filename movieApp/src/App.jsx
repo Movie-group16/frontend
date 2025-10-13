@@ -15,6 +15,7 @@ import FavouritesPage from './components/FavouritesPage/favouritesPage.jsx'
 import RegistrationPage from './components/RegistrationPage/registrationPage.jsx'
 import ReviewPage from './components/ReviewPage/reviewPage.jsx'
 import GroupPage from './components/groupPage/groupPage.jsx'
+import GroupMembersPage from './components/GroupMembersPage/groupMembersPage.jsx';
 import DiscussionPage from './components/groupPage/discussionPage/discussionPage.jsx'
 import GroupReviews from './components/groupPage/groupReviews/groupReviews.jsx'
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/groups" element={<GroupsPage />} />
         <Route path="/groups/:id" element={<GroupPage />} />
         <Route path="/groups/create" element={<CreateGroupPage />} />
+        <Route path="/groups/:id/members" element={<GroupMembersPage />} />
         <Route path="/friends" element={<FriendsPage />} />
         <Route path="/favourites/:id" element={<FavouritesPage />} />
         <Route path="/movie/:id" element={<MovieScreen token={token}/>} />
