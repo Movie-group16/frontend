@@ -25,20 +25,11 @@ function MovieScreen( {token} ) {
     const userId = localStorage.getItem('userId')
 
     const [movieDetails, setMovieDetails] = useState({})
-    const [reviewText, setReviewText] = useState("")
-    const [reviewTitle, setReviewTitle] = useState('')
-    //max review score is 5. Shown with stars...
-    const [reviewScore, setReviewScore] = useState(0)
     const [isFavourite, setIsFavourite] = useState(false)
-    const [hasReview, setHasReview] = useState(false)
-
-    
     
     useEffect(() => {
-      
       fetchFavourites()
-      //fetchReviews()
-
+      
       fetch(movieDetailsUrl,
         {
           headers : {
@@ -54,25 +45,7 @@ function MovieScreen( {token} ) {
           })
           .catch(err => console.log(err))
     }, [])
-    
-/*
-    const fetchReviews = async () => {
-      try {
-        console.log("user id " + userId + ` ${url}/reviews/${userId}`)
-        const res = await axios.get(`${url}/reviews/${userId}/${movieId}`)
-        const reviews = res.data
 
-        if( reviews[0] && reviews[0].movie_id === Number(movieId)){
-
-          console.log("has review")
-          setHasReview(true)
-          setReviewScore(reviews[0].rating)
-          setReviewText(reviews[0].review_text)
-        }
-      } catch (err) {
-        console.error("Error checking favourites:", err)
-      }
-    }*/
     const fetchFavourites = async () => {
       try {
         const res = await axios.get(`${url}/favourites/user/${userId}/favourites`)
