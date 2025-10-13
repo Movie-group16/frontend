@@ -59,7 +59,7 @@ function FriendsPage() {
     setIsSearching(true)
     setHasSearched(true)
     try {
-      const response = await axios.get(`http://localhost:3001/user/${searchTerm}`)
+      const response = await axios.get(`http://localhost:3001/user/user/${searchTerm}`)
       const users = response.data || []
       const foundUser = users.length > 0 ? users[0] : null
       setSearchResult(foundUser)
