@@ -6,14 +6,6 @@
   overflow: hidden; 
 }
 
-.tab-navigation {
-  display: flex;
-  justify-content: center;
-  gap: 0;
-  margin-bottom: 2em;
-  border-bottom: 2px solid #555;
-}
-
 .tab-btn {
   padding: 1em 2em;
   border: none;
@@ -73,17 +65,6 @@
     overflow: hidden; 
 }
 
-.discussions-title {
-    color: #646cff;
-    font-size: 2em;
-    margin-bottom: 1em;
-    text-align: center;
-    border-bottom: 2px solid #646cff;
-    padding-bottom: 0.5em;
-    flex-shrink: 0; 
-    margin-top: 0; 
-}
-
 .discussions-list {
   flex: 1;
   overflow-y: auto;
@@ -111,7 +92,6 @@
   background: #535bf2;
 }
 
-/* Rest of your existing styles remain the same */
 .group-avatar {
   display: flex;
   justify-content: center;
@@ -144,15 +124,13 @@
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 1em;
   margin-top: 2em;
   padding: 0;
   width: 100%;
 }
 
 .back-btn {
-  padding: 0.8em 1.5em;
-  border: 2px solid #888;
+  border: 1px solid #888;
   border-radius: 8px;
   background: transparent;
   color: #fff;
@@ -173,7 +151,7 @@
   border-radius: 12px;
   padding: 1.5em;
   transition: border-color 0.3s, box-shadow 0.3s;
-  flex-shrink: 0; /* Prevent boxes from shrinking */
+  flex-shrink: 0; 
 }
 
 .discussion-box:hover {
@@ -203,10 +181,6 @@
 .discussion-author {
   color: #646cff;
   font-weight: 500;
-}
-
-.discussion-date {
-  color: #888;
 }
 
 .discussion-content {
@@ -317,11 +291,6 @@
   transform: scale(0.95);
 }
 
-.likes-dislikes {
-  display: flex;
-  gap: 1em;
-}
-
 .create-post-container {
   background: #333;
   border: 1px solid #555;
@@ -396,7 +365,6 @@
   margin-top: 0;
 }
 
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
