@@ -3,20 +3,22 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './groupPage.css'
 
-function GroupPage() {
+function GroupPage({ token }) {
   const { id } = useParams()
   const navigate = useNavigate()
   const [group, setGroup] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [discussions, setDiscussions] = useState([])
-  const [reviews, setReviews] = useState([])
   const [activeTab, setActiveTab] = useState('discussions')
     const [newPost, setNewPost] = useState({
     title: '',
     text: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [confirmAction, setConfirmAction] = useState(null)
+  const [confirmMessage, setConfirmMessage] = useState('')
   const userId = localStorage.getItem('userId')
 
   useEffect(() => {
@@ -88,7 +90,20 @@ function GroupPage() {
               }
           })
           discussion.username = userResponse.data.username || 'Unknown'
+
+          try {
+            const commentsResponse = await axios.get(`http://localhost:3001/discussions/discussion/${discussion.id}/comments`, {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            })
+            discussion.comment_count = commentsResponse.data.length
+          } catch (error) {
+            console.error('Error fetching comments for discussion:', discussion.id, error)
+            discussion.comment_count = 0
+          }
         }
+        
         setDiscussions(discussionData)
     } catch (error) {
         console.error('Error fetching discussions:', error)
@@ -113,60 +128,39 @@ function GroupPage() {
     }
   }
 
-  const leaveGroup = async () => {
-    if (confirm('Are you sure you want to leave this group?')) {
-      try {
-        const token = localStorage.getItem('token')
-        await axios.delete(`http://localhost:3001/groups/${id}/leave`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        
-        alert('Successfully left the group!')
-        navigate('/groups')
-      } catch (error) {
-        console.error('Error leaving group:', error)
-        alert('Failed to leave group')
-      }
-    }
-  }
-
-  const handleLike = async (discussionId) => {
+  const handleLikeDiscussion = async (discussionId) => {
     try {
-      const token = localStorage.getItem('token')
-      await axios.put(`http://localhost:3001/comment/${discussionId}/like`, {
-        userId: userId,
-        action: 'like'
-      }, {
+      const response = await fetch(`http://localhost:3001/discussions/discussion/${discussionId}/like`, {
+        method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: parseInt(userId) })
       })
-      
+      const data = await response.json()
+
       fetchDiscussions()
     } catch (error) {
       console.error('Error liking discussion:', error)
-      alert('Failed to like discussion')
     }
   }
 
-  const handleDislike = async (discussionId) => {
+  const handleDislikeDiscussion = async (discussionId) => {
     try {
-      const token = localStorage.getItem('token')
-      await axios.put(`http://localhost:3001/comment/${discussionId}/dislike`, {
-        userId: userId,
-        action: 'dislike'
-      }, {
+      const response = await fetch(`http://localhost:3001/discussions/discussion/${discussionId}/dislike`, {
+        method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: parseInt(userId) })
+      })   
+      const data = await response.json()
+
       fetchDiscussions()
     } catch (error) {
       console.error('Error disliking discussion:', error)
-      alert('Failed to dislike discussion')
     }
   }
 
@@ -207,6 +201,63 @@ function GroupPage() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const deleteGroup = async () => {
+    setConfirmMessage('Are you sure you want to delete this group? This action cannot be undone and will remove all discussions and members.')
+    setConfirmAction(() => async () => {
+      try {
+        const token = localStorage.getItem('token')
+        await axios.delete(`http://localhost:3001/groups/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          data: {
+            userId: parseInt(userId)
+          }
+        })
+        
+        navigate('/groups')
+      } catch (error) {
+        console.error('Error deleting group:', error)
+        alert('Failed to delete group')
+      }
+    })
+    setShowConfirmModal(true)
+  }
+
+  const leaveGroup = async () => {
+      setConfirmMessage('Are you sure you want to leave this group?')
+      setConfirmAction(() => async () => {
+          try {         
+              await axios.delete(`http://localhost:3001/groups/${id}/leave`, {
+                  data: { userId }, 
+                  headers: {
+                      Authorization: `Bearer ${token}`
+                  }
+              })
+              navigate('/groups')
+          } catch (error) {
+              console.error('Error leaving group:', error)
+              alert('Failed to leave group')
+          }
+      })
+      setShowConfirmModal(true)
+  }
+
+  const handleConfirm = async () => {
+    if (confirmAction) {
+      await confirmAction()
+    }
+    setShowConfirmModal(false)
+    setConfirmAction(null)
+    setConfirmMessage('')
+  }
+
+  const handleCancel = () => {
+    setShowConfirmModal(false)
+    setConfirmAction(null)
+    setConfirmMessage('')
   }
 
   const renderTabContent = () => {
@@ -261,13 +312,13 @@ function GroupPage() {
                     <div className="likes-dislikes">
                       <button 
                         className="like-btn"
-                        onClick={() => handleLike(discussion.id)}
+                        onClick={() => handleLikeDiscussion(discussion.id)}
                       >
                         👍 {discussion.likes || 0}
                       </button>
                       <button 
                         className="dislike-btn"
-                        onClick={() => handleDislike(discussion.id)}
+                        onClick={() => handleDislikeDiscussion(discussion.id)}
                       >
                         👎 {discussion.dislikes || 0}
                       </button>
@@ -279,17 +330,18 @@ function GroupPage() {
                       Go to Discussion
                     </button>
                   </div>
+                  <span className="comment-count">{discussion.comment_count || 0} comments</span>
                 </div>
               ))
             )}
           </div>
         )
 
-      case 'reviews':
+      case 'movies':
         return (
-          <div className="reviews-list">
-            <div className="no-reviews">
-              <p>Reviews feature not implemented yet.</p>
+          <div>
+            <div>
+              <p>Group movies feature is not implemented yet.</p>
             </div>
           </div>
         )
@@ -308,6 +360,22 @@ function GroupPage() {
 
   return (
     <div className="group-page">
+      {showConfirmModal && (
+        <div className="modal-overlay">
+          <div className="confirmation-modal">
+            <h3>Confirm Action</h3>
+            <p>{confirmMessage}</p>
+            <div className="modal-buttons">
+              <button className="cancel-btn" onClick={handleCancel}>
+                Cancel
+              </button>
+              <button className="confirm-btn" onClick={handleConfirm}>
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="group-layout">
         <div className="page-information">
           <div className="group-avatar">
@@ -349,9 +417,16 @@ function GroupPage() {
             <button className="back-btn" onClick={() => navigate('/groups')}>
               View members
             </button>
-            <button className="back-btn" onClick={leaveGroup}>
-              Leave group
-            </button>
+            
+            {isOwner ? (
+              <button className="back-btn" onClick={deleteGroup}>
+                Delete Group
+              </button>
+            ) : (
+              <button className="leave-group-btn" onClick={leaveGroup}>
+                Leave Group
+              </button>
+            )}
           </div>
         </div>
 
@@ -365,9 +440,9 @@ function GroupPage() {
             </button>
             <button 
               className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
-              onClick={() => setActiveTab('reviews')}
+              onClick={() => setActiveTab('movies')}
             >
-              Reviews
+              Movies
             </button>
           </div>
 

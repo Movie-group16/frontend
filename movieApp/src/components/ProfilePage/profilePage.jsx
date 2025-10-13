@@ -18,6 +18,10 @@ function ProfilePage() {
   const movieDbApiKey = import.meta.env.VITE_TMDB_API_KEY
   const [movieTitles, setMovieTitles] = useState({});
   const [favouriteTitles, setFavouriteTitles] = useState({});
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [confirmAction, setConfirmAction] = useState(null)
+  const [confirmMessage, setConfirmMessage] = useState('')
+  const currentUserId = localStorage.getItem('userId')
 
   useEffect(() => {
     if (!userId) return;
@@ -119,8 +123,64 @@ useEffect(() => {
     navigate(`/reviews/${userId}`, {state: { user: username, reviews}});
   };
 
+  const deleteProfile = async () => {
+    setConfirmMessage('Are you sure you want to delete your profile? This action cannot be undone and will permanently remove all your data including reviews, favourites, and account information.')
+    setConfirmAction(() => async () => {
+      try {
+        const token = localStorage.getItem('token')
+        const response = await fetch(`http://localhost:3001/user/delete/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        localStorage.removeItem('token')
+        localStorage.removeItem('userId')
+        navigate('/')
+        window.location.reload()
+      } catch (error) {
+        console.error('Error deleting profile:', error)
+        alert('Failed to delete profile')
+      }
+    })
+    setShowConfirmModal(true)
+  }
+
+  const handleConfirm = async () => {
+    if (confirmAction) {
+      await confirmAction()
+    }
+    setShowConfirmModal(false)
+    setConfirmAction(null)
+    setConfirmMessage('')
+  }
+
+  const handleCancel = () => {
+    setShowConfirmModal(false)
+    setConfirmAction(null)
+    setConfirmMessage('')
+  }
+
+  const isOwnProfile = parseInt(currentUserId) === parseInt(userId)
+
   return (
   <div className='profile'>
+      {showConfirmModal && (
+        <div className="modal-overlay">
+          <div className="confirmation-modal">
+            <h3>Confirm Action</h3>
+            <p>{confirmMessage}</p>
+            <div className="modal-buttons">
+              <button className="cancel-btn" onClick={handleCancel}>
+                Cancel
+              </button>
+              <button className="confirm-btn" onClick={handleConfirm}>
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <h1>Profile Page</h1>
       <div className='header'>
         <img
@@ -166,6 +226,15 @@ useEffect(() => {
         
       </div>
     </div>
+      {isOwnProfile && (
+        <>
+          <div className="profile-actions">
+            <button onClick={deleteProfile} className="deleteProfileBtn">
+              Delete Profile
+            </button>
+          </div>
+        </>
+      )}
   </div>
   );
 }
