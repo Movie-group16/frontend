@@ -1,7 +1,7 @@
 import React from 'react';
-import './groupReviews.css'
+import './groupMovies.css'
 
-const GroupReviews = () => {
+const GroupMovies = () => {
     return (
         <div>
             <p>Not implemented yet</p>
@@ -9,4 +9,4 @@ const GroupReviews = () => {
     );
 };
 
-export default GroupReviews;
+export default GroupMovies;
