@@ -1,7 +1,13 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import './bottomPanel.css'
 
-const panelRoutes = [
+
+
+function BottomPanel({ token }) {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const panelRoutes = [
   { label: 'Movies', path: '/' },
   { label: 'Showtimes', path: '/showtimes' },
   { label: 'Profile', path: '/profile/' + localStorage.getItem('userId') },
@@ -9,10 +15,6 @@ const panelRoutes = [
   { label: 'Friends', path: '/friends' },
   { label: 'Favourites', path: '/favourites/' + localStorage.getItem('userId') },
 ]
-
-function BottomPanel({ token }) {
-  const navigate = useNavigate()
-  const location = useLocation()
 
   const visibleRoutes = token
     ? panelRoutes
