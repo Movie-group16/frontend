@@ -60,7 +60,9 @@
 .movies-page-movie-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
   gap: 2em;
+  padding-right: 4em;
   max-width: 700px;
 }
 

@@ -4,9 +4,7 @@ import { useLocation } from 'react-router-dom'
 import './movieScreen.css'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { FaRegStar } from "react-icons/fa6";
-import { FaRegStarHalfStroke } from "react-icons/fa6";
-import { FaStar } from "react-icons/fa6";
+
 import axios from 'axios';
 import movieVideos from './movieVideos'
 import reviewShowcase from './reviewShowcase';
@@ -29,7 +27,7 @@ function MovieScreen( {token} ) {
     
     useEffect(() => {
       fetchFavourites()
-      
+
       fetch(movieDetailsUrl,
         {
           headers : {
@@ -56,6 +54,16 @@ function MovieScreen( {token} ) {
       }
     }
     const getMoneyInReadableFormat = (money) => {
+
+      switch(money){
+        case 0:
+          return 'N/A'
+        case null:
+          return 'N/A'
+        case undefined:
+          return 'N/A'
+      }
+
       if (money >= 1000000000) {
         return (money / 1000000000).toFixed() + 'B $';
       } else if (money >= 1000000) {

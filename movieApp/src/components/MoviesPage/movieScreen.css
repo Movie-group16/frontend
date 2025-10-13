@@ -45,7 +45,6 @@
     width: 80%;
     padding: 0.5em 1em;
     
-    flex: 2;
     text-align: left;
 }
 
@@ -65,7 +64,7 @@
 .production-companies-list {
     display: flex;
     flex-wrap: wrap;
-    margin: 1em;
+    flex-direction: column;
 }
 
 .company-logo {
@@ -84,6 +83,7 @@
 }
 
 .overview-and-review {
+    padding-left: 1em;
     display: flex;
     flex-direction: column;
 }
