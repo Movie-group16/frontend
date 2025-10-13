@@ -5,6 +5,10 @@ import "./ProfilePage.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
 
+// Add friend nappi jos ei ole oma profiili. Settings nappi jossa pystyy muokkaamaan bion, nimen, profiilikuvan ja sähköpostin.
+// Groupit joissa on näkymä ja jos on favourite laita tähti vieree.
+// julkinen ja private profiili settingseihin.
+
 function ProfilePage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -204,7 +208,7 @@ useEffect(() => {
       <ul>
             {reviews.slice(0, 5).map((review) => (
               <li key={review.id}>
-                <strong> Movie Title:{movieTitles[review.movie_id] || "Loading..."} </strong>{" "} <br />
+                <strong> Movie Title: {movieTitles[review.movie_id] || "Loading..."} </strong>{" "} <br />
                 - Rating: {review.rating}/5 <br />
                 {review.review_text}
                 </li>
