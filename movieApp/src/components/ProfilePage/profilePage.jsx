@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 import "./ProfilePage.css";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import profilePic from '../../assets/Profiili kuva.webp';
 
 // Add friend nappi jos ei ole oma profiili. Settings nappi jossa pystyy muokkaamaan bion, nimen, profiilikuvan ja sähköpostin.
 // Groupit joissa on näkymä ja jos on favourite laita tähti vieree.
@@ -26,15 +26,23 @@ function ProfilePage() {
   const [confirmAction, setConfirmAction] = useState(null)
   const [confirmMessage, setConfirmMessage] = useState('')
   const currentUserId = localStorage.getItem('userId')
-
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  //  const [privateProfile, setPrivateProfile] = useState(false);
   useEffect(() => {
     if (!userId) return;
+    setBio("");
+    setUsername("");
+    setUserEmail("");
+    setFavourites([]);
+    setReviews([]);
+
     //profiilin tiejot
     axios.get(`${backUrl}/profile/${userId}`)
       .then(res => {
         setUsername(res.data.username || "");
         setBio(res.data.user_desc || "");
         setUserEmail(res.data.email || "");
+        // setPrivateProfile(res.data.is_private || false);
       })
       .catch(err => {
         console.error("Error loading user:", err);
@@ -115,16 +123,26 @@ useEffect(() => {
     fetchFavouriteTitles();
   }, [favourites, movieDbApiKey]);
 
-  const saveBio = () => {
-    if (!userId) return;
-  try{
-  axios.put(`${backUrl}/profile/${userId}/description`, { description: bio });
-    console.log("Bio saved successfully");
-  } catch (err) { console.error("Error saving description:", err); }
+  const saveSettings = async () => {
+    try {
+      await axios.put(`${backUrl}/profile/${userId}`, {
+        email: userEmail,
+        description: bio,
+        // is_private: privateProfile,
+      });
+      alert("Profile updated succesfully!");
+      setIsSettingsOpen(false);
+    } catch (err) {
+      console.error("Error saving settings:", err);
+    }
   };
 
   const goToReviews = () => {
     navigate(`/reviews/${userId}`, {state: { user: username, reviews}});
+  };
+  
+  const goToFavourites = () => {
+    navigate(`/favourites/${userId}`, {state: { user: username, favourites}})
   };
 
   const deleteProfile = async () => {
@@ -169,6 +187,7 @@ useEffect(() => {
 
   return (
   <div className='profile'>
+
       {showConfirmModal && (
         <div className="modal-overlay">
           <div className="confirmation-modal">
@@ -185,23 +204,27 @@ useEffect(() => {
           </div>
         </div>
       )}
-      <h1>Profile Page</h1>
+      <h1>Profile Page</h1> 
+    {isOwnProfile && (
+      <button className="settings-button" onClick={() => setIsSettingsOpen(true)}>
+      ⚙️ Settings
+      </button>
+    )}
       <div className='header'>
         <img
-        src='src\assets\Profiili kuva.webp'
+        src={profilePic}
         alt='profile'
         className='profilepic'
         />
       </div>
       <h2 className="name">{username}</h2>
-      <h3 className="email">{userEmail}</h3>
-      <textarea className='bio'
-        value={bio}
-        onChange= {(e) => setBio(e.target.value)}
-        placeholder="Write something about yourself..."
-        rows={4}
+      <textarea 
+      className='bio'
+      value={bio}
+      readOnly
+      placeholder="This user has no bio yet..."
+      rows={4}
       />
-      <button onClick={saveBio} className='"saveBtn'>Save Bio</button>
     <div className='sections'>
       <div className='reviewBox'>
         <h3>Latest reviews</h3>
@@ -227,17 +250,49 @@ useEffect(() => {
               </li>
           ))}
         </ul>
-        
+        <button onClick={goToFavourites}>All Favourites</button>
       </div>
     </div>
-      {isOwnProfile && (
-        <>
-          <div className="profile-actions">
-            <button onClick={deleteProfile} className="deleteProfileBtn">
-              Delete Profile
-            </button>
+
+      {isSettingsOpen && (
+        <div className="modal-overlay">
+          <div className="settings-modal">
+            <h3>Profile Settings</h3>
+
+            <label>Bio:</label>
+            <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            rows={3}
+            />
+
+            <label>Email:</label>
+            <input
+              type="email"
+              value={userEmail}
+              onChange={(e) => setUserEmail(e.target.value)}
+              />
+              {/*
+              <div className="privacy-toggle">
+                <label>
+                  <input
+                  type="checkbox"
+                  checked={privateProfile}
+                  onChange={(e) => setPrivateProfile(e.target.checked)}
+                  />
+                  Private Profile
+                </label>
+              </div>
+              */}
+              <div className="settings-buttons">
+                <button onClick={saveSettings} className="saveBtn">Save</button>
+                <button onClick={deleteProfile} className="deleteBtn">Delete account</button>
+                <button onClick ={() => setIsSettingsOpen(false)} className="cancelBtn">
+                  Close 
+                </button>
+              </div>
           </div>
-        </>
+        </div>
       )}
   </div>
   );

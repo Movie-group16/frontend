@@ -144,6 +144,8 @@ const renderStars = () => (
                         <strong>{movie.title || "Loading..."}</strong>
                       </div>
 
+                      <div className="reviewText">{review.review_text}</div>
+
                       <div className="stars">
                         {[1, 2, 3, 4, 5].map((star) =>
                         star <= review.rating ? (
@@ -154,7 +156,6 @@ const renderStars = () => (
                         )}
                       </div>
 
-                      <div className="reviewText">{review.review_text}</div>
                     </div>
                     );
                   })}

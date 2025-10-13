@@ -97,7 +97,7 @@ font-size: 1.2rem;
   color: #dcdcdc;
   font-size: 1.1rem;
 }
-/*
+
 .movieBox button {
   margin-top: 15px;
   display: block;
@@ -115,7 +115,7 @@ font-size: 1.2rem;
 .movieBox button:hover {
   background-color: #005fa3;
 }
-*/
+
 
 /* Profile action buttons */
 .profile-actions {
@@ -320,3 +320,49 @@ font-size: 1.2rem;
     align-self: flex-end;
   }
 }
+
+
+
+.settings-button {
+
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.settings-button:hover {
+  background-color: #444;
+}
+
+.settings-modal {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 1rem;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.settings-modal input,
+.settings-modal textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+}
+
+.settings-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.saveBtn { background-color: #4caf50; color: white; }
+.deleteBtn { background-color: #e53935; color: white; }
+.cancelBtn { background-color: #777; color: white; }
