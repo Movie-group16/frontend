@@ -188,7 +188,7 @@ function MovieScreen( {token} ) {
         </div>
         </div>
         <div className="movie-screen-back-button-container">
-          <button className="movie-screen-back-button" onClick={() => window.history.back()}>Go Back</button>
+          <button className="movie-screen-back-button" onClick={() => window.location = `/`}>Go Back</button>
         </div>
       </div>
     )
