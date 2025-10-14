@@ -32,6 +32,17 @@
   margin: auto;
 }
 
+.remove-request-button {
+  background-color: #c0400e;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin-left: 16px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
 .friend-request-button {
   background-color: #1976d2;
   color: white;
@@ -51,12 +62,39 @@
 
 .friendText {
   margin-top: 8px;
-  color: #888;
+  color: #f55f5f;
   font-size: 1rem;
   border: #1976d2;
   border-radius: 8px;
   padding: 6px 12px;
   display: inline-block;
+}
+
+.friend-invite-actions {
+  display: flex;
+  gap: 12px;
+  margin-left: 16px;
+  justify-content: center;
+}
+
+.accept-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+
+}
+
+.reject-btn {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+
 }
 
 .bio {
