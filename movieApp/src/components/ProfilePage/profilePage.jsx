@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
-import "./ProfilePage.css";
+import "./profilePage.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import profilePic from '../../assets/Profiili kuva.webp';
 
