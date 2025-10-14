@@ -423,10 +423,13 @@ function GroupPage({ token }) {
                 Delete Group
               </button>
             ) : (
-              <button className="leave-group-btn" onClick={leaveGroup}>
+              <button className="back-btn" onClick={leaveGroup}>
                 Leave Group
               </button>
             )}
+            <button className="back-btn" onClick={() => navigate(-1)}>
+              Back
+            </button>
           </div>
         </div>
 

@@ -11,6 +11,10 @@ function Header({ token, setToken }) {
     navigate('/')
   }
 
+  if (location.pathname === '/login' || location.pathname === '/register') {
+    return null
+  }
+
   return (
     <div style={{
       position: 'absolute',
