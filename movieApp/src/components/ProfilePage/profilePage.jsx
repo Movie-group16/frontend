@@ -5,9 +5,6 @@ import "./ProfilePage.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import profilePic from '../../assets/Profiili kuva.webp';
 
-// Add friend nappi jos ei ole oma profiili. Settings nappi jossa pystyy muokkaamaan bion, nimen, profiilikuvan ja sähköpostin.
-// Groupit joissa on näkymä ja jos on favourite laita tähti vieree.
-// julkinen ja private profiili settingseihin.
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -27,7 +24,11 @@ function ProfilePage() {
   const [confirmMessage, setConfirmMessage] = useState('')
   const currentUserId = localStorage.getItem('userId')
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  //  const [privateProfile, setPrivateProfile] = useState(false);
+  const [groups, setGroups] = useState([]);
+  const [isFriend, setIsFriend] = useState(false);
+  const [requestSent, setRequestSent] = useState(false);
+
+
   useEffect(() => {
     if (!userId) return;
     setBio("");
@@ -42,7 +43,6 @@ function ProfilePage() {
         setUsername(res.data.username || "");
         setBio(res.data.user_desc || "");
         setUserEmail(res.data.email || "");
-        // setPrivateProfile(res.data.is_private || false);
       })
       .catch(err => {
         console.error("Error loading user:", err);
@@ -53,12 +53,33 @@ function ProfilePage() {
       .then(res =>  setReviews(res.data || []))
       .catch(err => console.error("Error loading reviews:", err));
 
-
       axios.get(`${backUrl}/favourites/user/${userId}/favourites`)
       .then(res => setFavourites(res.data || []))
       .catch(err => console.error("Error loading favourites:", err));
 
+      axios.get(`${backUrl}/profile/groups/${userId}`)
+      .then(res => setGroups(res.data || []))
+      .catch(err => console.error("Error loading groups:", err));
+
   }, [userId]);
+
+
+  // tarkistaa että onko profiilin omistaja kaverina
+  useEffect(() => {
+    if (currentUserId && userId && currentUserId !== userId) {
+      axios.get(`${backUrl}/friends/status/${userId}?userId=${currentUserId}`)
+
+        .then(res => {
+          setIsFriend(res.data.status === 'friends');
+          setRequestSent(res.data.status === 'pending');
+        })
+        .catch(() => {
+          setIsFriend(false);
+          setRequestSent(false);
+        });
+    }
+  }, [currentUserId, userId]);
+
 
   // Titlet arvosteltuille elokuville
   useEffect(() => {
@@ -91,8 +112,9 @@ function ProfilePage() {
     fetchTitles();
   }, [reviews, movieDbApiKey]);
 
+
   // Titlet favouriteille
-useEffect(() => {
+  useEffect(() => {
   
     const fetchFavouriteTitles = async () => {
       const titles = {};
@@ -123,12 +145,25 @@ useEffect(() => {
     fetchFavouriteTitles();
   }, [favourites, movieDbApiKey]);
 
+
+  const sendFriendRequest = async () => {
+    try {
+      await axios.post(`${backUrl}/friends/request`, {
+        userId: currentUserId,
+        friendId: userId
+      });
+      setRequestSent(true);
+    } catch (err) {
+      alert("Failed to send friend request.");
+    }
+  };
+
+
   const saveSettings = async () => {
     try {
       await axios.put(`${backUrl}/profile/${userId}`, {
         email: userEmail,
         description: bio,
-        // is_private: privateProfile,
       });
       alert("Profile updated succesfully!");
       setIsSettingsOpen(false);
@@ -137,13 +172,16 @@ useEffect(() => {
     }
   };
 
+
   const goToReviews = () => {
     navigate(`/reviews/${userId}`, {state: { user: username, reviews}});
   };
   
+
   const goToFavourites = () => {
     navigate(`/favourites/${userId}`, {state: { user: username, favourites}})
   };
+
 
   const deleteProfile = async () => {
     setConfirmMessage('Are you sure you want to delete your profile? This action cannot be undone and will permanently remove all your data including reviews, favourites, and account information.')
@@ -168,6 +206,7 @@ useEffect(() => {
     setShowConfirmModal(true)
   }
 
+
   const handleConfirm = async () => {
     if (confirmAction) {
       await confirmAction()
@@ -177,14 +216,17 @@ useEffect(() => {
     setConfirmMessage('')
   }
 
+
   const handleCancel = () => {
     setShowConfirmModal(false)
     setConfirmAction(null)
     setConfirmMessage('')
   }
 
+
   const isOwnProfile = parseInt(currentUserId) === parseInt(userId)
 
+  
   return (
   <div className='profile'>
 
@@ -205,19 +247,34 @@ useEffect(() => {
         </div>
       )}
       <h1>Profile Page</h1> 
-    {isOwnProfile && (
-      <button className="settings-button" onClick={() => setIsSettingsOpen(true)}>
-      ⚙️ Settings
-      </button>
-    )}
       <div className='header'>
         <img
         src={profilePic}
         alt='profile'
         className='profilepic'
         />
+        <h2 className="name">{username}</h2>
+      {isOwnProfile && (<button className="settings-button" onClick={() => setIsSettingsOpen(true)}>
+      ⚙️ Settings
+      </button>
+      )}
+      {!isOwnProfile && !isFriend && !requestSent && (
+        <button className="friend-request-button" onClick={sendFriendRequest}>
+        Send Friend Request
+        </button>
+      )}
+      {requestSent && !isFriend && (
+        <span className="friend-request-sent">Friend request sent!</span>
+      )}
       </div>
-      <h2 className="name">{username}</h2>
+      {!isFriend && !isOwnProfile && !requestSent && (
+        <p className="friendText">You are not friends with this person.</p>
+      )}
+      {!isFriend && requestSent && (
+        <p className="friendText">Friend request pending.</p>
+      )}
+
+      <h3>Bio</h3>
       <textarea 
       className='bio'
       value={bio}
@@ -226,31 +283,50 @@ useEffect(() => {
       rows={4}
       />
     <div className='sections'>
-      <div className='reviewBox'>
-        <h3>Latest reviews</h3>
-      <ul>
+      <div className='left-column'>
+        <div className='reviewBox'>
+          <h3>Latest reviews</h3>
+          {reviews.length === 0 && <p>No reviews added yet.</p>}
+          <ul>
             {reviews.slice(0, 5).map((review) => (
               <li key={review.id}>
-                <strong> Movie Title: {movieTitles[review.movie_id] || "Loading..."} </strong>{" "} <br />
+                <strong> Movie Title: </strong>{movieTitles[review.movie_id] || "Loading..."} {" "} <br />
                 - Rating: {review.rating}/5 <br />
-                {review.review_text}
+                {review.review_title}
                 </li>
             ))}
           </ul>
-          <button onClick={goToReviews}>All Reviews</button>
+            <button onClick={goToReviews}>All Reviews</button>
+        </div>
+        <div className='movieBox'>
+          <h3>Favourite Movies</h3>
+          {favourites.length === 0 && <p>No favourite movies added yet.</p>}
+          <ul>
+            {favourites.slice(0,5).map((favourite) => (
+              <li key={favourite.id || favourite.movie_id}>
+                <strong>Movie Title: </strong>
+                {favouriteTitles[favourite.movie_id] || "Loading..."}
+                </li>
+            ))}
+          </ul>
+          <button onClick={goToFavourites}>All Favourites</button>
+        </div>
       </div>
-      <div className='movieBox'>
-        <h3>Favourite Movies</h3>
-        <ul>
-          {favourites.slice(0,5).map((favourite) => (
-            <li key={favourite.id || favourite.movie_id}>
-              <strong>
-              Movie Title: {favouriteTitles[favourite.movie_id] || "Loading..."}
-              </strong>
+      <div className='groupBox'>
+        <h3>Joined Groups</h3>
+        {groups.length === 0 ? (
+          <p>You haven't joined any groups yet.</p>
+        ) : (
+          <ul>
+            {groups.map((group) => (
+              <li key={group.id}>
+                <strong>Group Name: </strong>{group.group_name}
+                <p><strong> Group Description: </strong>{group.group_desc}</p>
+                <button className="groupbutton" onClick={() => navigate(`/groups/${group.id}`)}>Group Page</button> 
               </li>
-          ))}
-        </ul>
-        <button onClick={goToFavourites}>All Favourites</button>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
 
@@ -272,18 +348,6 @@ useEffect(() => {
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               />
-              {/*
-              <div className="privacy-toggle">
-                <label>
-                  <input
-                  type="checkbox"
-                  checked={privateProfile}
-                  onChange={(e) => setPrivateProfile(e.target.checked)}
-                  />
-                  Private Profile
-                </label>
-              </div>
-              */}
               <div className="settings-buttons">
                 <button onClick={saveSettings} className="saveBtn">Save</button>
                 <button onClick={deleteProfile} className="deleteBtn">Delete account</button>
