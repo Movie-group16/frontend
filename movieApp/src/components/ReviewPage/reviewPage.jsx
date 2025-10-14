@@ -15,15 +15,16 @@ const UserReviews = () => {
     const [movieDetails, setMovieDetails] = useState({})
     const [selectedReview, setSelectedReview] = useState(null);
     const [editedText, setEditedText] = useState("");
-    const [isPrivate, setIsPrivate] = useState(false);
     const [editedRating, setEditedRating] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [editedTitle, setEditedTitle] = useState("");
 
-    useEffect(() => {
+
+  useEffect(() => {
     axios.get(`${backUrl}/reviews/${userId}`)
       .then(res =>  setReviews(res.data || []))
       .catch(err => console.error("Error loading reviews:", err));
-    }, [userId])
+  }, [userId])
 
 
   useEffect(() => {
@@ -58,60 +59,63 @@ const UserReviews = () => {
   }, [reviews, movieDbApiKey]);
 
 
-const openEdit = (review) => {
-  setSelectedReview(review);
-  setEditedText(review.review_text);
-//  setIsPublic(review.isPrivate ?? false);
-};
+  const openEdit = (review) => {
+    setSelectedReview(review);
+    setEditedText(review.review_text);
+    setEditedTitle(review.review_title);
+    setEditedRating(review.rating);
+  };
 
-const closeEdit = () => {
-  setSelectedReview(null);
-  setEditedText("");
-};
+  const closeEdit = () => {
+    setSelectedReview(null);
+    setEditedText("");
+    setEditedTitle("");
+    setEditedRating(0);
 
-const saveEdit = async () => {
-  console.log("edited text:", editedText);
-  // console.log("private: ", isprivate);
-  setLoading(true)
-  try {
-    const updatedReview ={
-      review_text: editedText,
-//      is_private: isPrivate,
-      rating: editedRating,
-    };
+  };
 
-    await axios.put(`${backUrl}/reviews/${selectedReview.id}`, updatedReview);
+  const saveEdit = async () => {
+    console.log("edited text:", editedText);
+    setLoading(true)
+    try {
+      const updatedReview ={
+        review_text: editedText,
+        review_title: editedTitle,
+        rating: editedRating,
+      };
 
-    setReviews((prev) => 
-    prev.map((r) => 
-    r.id === selectedReview.id
-      ? {...r, ...updatedReview}
-      : r
-    )
+      await axios.put(`${backUrl}/reviews/review/${selectedReview.id}`, updatedReview);
+
+      setReviews((prev) => 
+      prev.map((r) => 
+      r.id === selectedReview.id
+        ? {...r, ...updatedReview}
+        : r
+        )
+      );
+      closeEdit();
+    } catch (err) {
+      console.error("Error updating review:", err);
+      alert("Failed to update review.");
+    } finally {
+      setLoading(false) 
+    }
+  };
+
+
+  const renderStars = () => (
+    <div className="star-edit-container">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+        key={star}
+        className="star-icon"
+        onClick={() => setEditedRating(star)}
+        >
+          {star <= editedRating ? <FaStar color="gold" /> : <FaRegStar color="gray" />}
+        </span>
+      ))}
+    </div>
   );
-  closeEdit();
-  } catch (err) {
-    console.error("Error updating review:", err);
-    alert("Failed to update review.");
-  } finally {
-   setLoading(false) 
-  }
-};
-
-
-const renderStars = () => (
-  <div className="star-edit-container">
-    {[1, 2, 3, 4, 5].map((star) => (
-      <span
-       key={star}
-       className="star-icon"
-       onClick={() => setEditedRating(star)}
-       >
-        {star <= editedRating ? <FaStar color="gold" /> : <FaRegStar color="gray" />}
-       </span>
-    ))}
-  </div>
-);
 
     return (
         <div className="reviewsPage">
@@ -144,9 +148,10 @@ const renderStars = () => (
                         <strong>{movie.title || "Loading..."}</strong>
                       </div>
 
-                      <div className="reviewText">{review.review_text}</div>
+                      <div className="reviewText"><strong>Title: </strong>{review.review_title}</div>
 
                       <div className="stars">
+                        <strong>Rating: </strong>
                         {[1, 2, 3, 4, 5].map((star) =>
                         star <= review.rating ? (
                           <FaStar key={star} color="gold" />
@@ -171,6 +176,13 @@ const renderStars = () => (
                     {movieDetails[selectedReview.movie_id]?.title || "Movie"}
                   </strong>
                 </p>
+                <strong>Title</strong>
+                <textarea 
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+                rows={1}
+                />
+                <strong>Review Text</strong>
                 <textarea
                   value={editedText}
                   onChange={(e) => setEditedText(e.target.value)}
@@ -180,15 +192,6 @@ const renderStars = () => (
                 <div className="rating-selector">
                   <label>Rating:</label>
                   {renderStars()}
-                </div>
-
-                <div className="checkbox-container">
-                  <input
-                  type="checkbox"
-                  checked={isPrivate}
-                  onChange={(e) => setIsPrivate(e.target.checked)}
-                  />
-                  <label>Private Review</label>
                 </div>
                 <div className="popup-buttons">
                   <button onClick={saveEdit}>Save</button>
