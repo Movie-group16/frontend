@@ -16,6 +16,7 @@ function ProfilePage() {
   const [favourites, setFavourites] = useState([]);
   const [reviews, setReviews] = useState([]);
   const backUrl = "http://localhost:3001";
+  const token = localStorage.getItem('token');
   const movieDbApiKey = import.meta.env.VITE_TMDB_API_KEY
   const [movieTitles, setMovieTitles] = useState({});
   const [favouriteTitles, setFavouriteTitles] = useState({});
@@ -226,7 +227,7 @@ function ProfilePage() {
 
   const isOwnProfile = parseInt(currentUserId) === parseInt(userId)
 
-  
+
   return (
   <div className='profile'>
 
@@ -254,23 +255,23 @@ function ProfilePage() {
         className='profilepic'
         />
         <h2 className="name">{username}</h2>
-      {isOwnProfile && (<button className="settings-button" onClick={() => setIsSettingsOpen(true)}>
+      {isOwnProfile && token && (<button className="settings-button" onClick={() => setIsSettingsOpen(true)}>
       ⚙️ Settings
       </button>
       )}
-      {!isOwnProfile && !isFriend && !requestSent && (
+      {!isOwnProfile && !isFriend && !requestSent && token &&(
         <button className="friend-request-button" onClick={sendFriendRequest}>
         Send Friend Request
         </button>
       )}
-      {requestSent && !isFriend && (
+      {requestSent && !isFriend && token && (
         <span className="friend-request-sent">Friend request sent!</span>
       )}
       </div>
-      {!isFriend && !isOwnProfile && !requestSent && (
+      {!isFriend && !isOwnProfile && !requestSent && token && (
         <p className="friendText">You are not friends with this person.</p>
       )}
-      {!isFriend && requestSent && (
+      {!isFriend && requestSent && token && (
         <p className="friendText">Friend request pending.</p>
       )}
 
@@ -296,7 +297,7 @@ function ProfilePage() {
                 </li>
             ))}
           </ul>
-            <button onClick={goToReviews}>All Reviews</button>
+            { token &&(<button onClick={goToReviews}>All Reviews</button>)}
         </div>
         <div className='movieBox'>
           <h3>Favourite Movies</h3>
@@ -309,7 +310,7 @@ function ProfilePage() {
                 </li>
             ))}
           </ul>
-          <button onClick={goToFavourites}>All Favourites</button>
+          { token &&(<button onClick={goToFavourites}>All Favourites</button>)}
         </div>
       </div>
       <div className='groupBox'>
@@ -322,7 +323,7 @@ function ProfilePage() {
               <li key={group.id}>
                 <strong>Group Name: </strong>{group.group_name}
                 <p><strong> Group Description: </strong>{group.group_desc}</p>
-                <button className="groupbutton" onClick={() => navigate(`/groups/${group.id}`)}>Group Page</button> 
+                { token &&(<button className="groupbutton" onClick={() => navigate(`/groups/${group.id}`)}>Group Page</button>)}
               </li>
             ))}
           </ul>
