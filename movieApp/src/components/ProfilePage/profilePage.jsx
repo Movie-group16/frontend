@@ -28,7 +28,7 @@ function ProfilePage() {
   const [groups, setGroups] = useState([]);
   const [isFriend, setIsFriend] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
-
+  const [friendshipStatus, setFriendshipStatus] = useState('');
 
   useEffect(() => {
     if (!userId) return;
@@ -71,10 +71,12 @@ function ProfilePage() {
       axios.get(`${backUrl}/friends/status/${userId}?userId=${currentUserId}`)
 
         .then(res => {
+          setFriendshipStatus(res.data.status);
           setIsFriend(res.data.status === 'friends');
           setRequestSent(res.data.status === 'pending');
         })
         .catch(() => {
+          setFriendshipStatus('');
           setIsFriend(false);
           setRequestSent(false);
         });
@@ -154,11 +156,55 @@ function ProfilePage() {
         friendId: userId
       });
       setRequestSent(true);
+      setFriendshipStatus('pending'); 
     } catch (err) {
       alert("Failed to send friend request.");
     }
   };
 
+  const acceptFriendRequest = async () => {
+    try {
+      await axios.put(`${backUrl}/friends/accept/${userId}`, { userId: currentUserId});
+      setFriendshipStatus('friends');
+      setIsFriend(true);
+      } catch (err) {
+      alert("Failed to accept friend request.");
+    }
+  };
+
+  const rejectFriendRequest = async () => {
+    try {
+      await axios.put(`${backUrl}/friends/reject/${userId}`, { userId: currentUserId });
+      setFriendshipStatus('not_friends');
+      setIsFriend(false);
+      setRequestSent(false);
+    } catch (err) {
+      alert("Failed to reject friend request.");
+    }
+  };
+
+  const removeFriend = async () => {
+    try {
+      await axios.delete(`${backUrl}/friends/remove/${userId}`, {
+        data: { userId: currentUserId }
+      });
+      setIsFriend(false);
+      setFriendshipStatus('not_friends');
+      alert("Friend removed.");
+    } catch (err) {
+      alert("Failed to remove friend.");
+    }
+  };
+
+  const cancelFriendRequest = async () => {
+    try {
+      await axios.put(`${backUrl}/friends/cancel/${userId}`, { userId: currentUserId });
+      setRequestSent(false);
+      setFriendshipStatus('not_friends');
+    } catch (err) {
+      alert("Failed to cancel friend request.");
+    }
+  };
 
   const saveSettings = async () => {
     try {
@@ -259,22 +305,45 @@ function ProfilePage() {
       ⚙️ Settings
       </button>
       )}
-      {!isOwnProfile && !isFriend && !requestSent && token &&(
-        <button className="friend-request-button" onClick={sendFriendRequest}>
-        Send Friend Request
-        </button>
-      )}
-      {requestSent && !isFriend && token && (
-        <span className="friend-request-sent">Friend request sent!</span>
+      
+      {!isOwnProfile && token && (
+        <>
+        {isFriend && (
+          <button className="remove-request-button" onClick={removeFriend}>
+          Remove Friend
+          </button>
+        )}
+        {!isFriend && !requestSent && friendshipStatus !== 'awaiting' && (
+          <button className="friend-request-button" onClick={sendFriendRequest}>
+          Send Friend Request
+          </button>
+        )}
+        {!isFriend && requestSent && friendshipStatus === 'pending' && (
+          <button className="remove-request-button" onClick={cancelFriendRequest}>
+           Cancel Friend Request
+          </button>
+        )}
+      </>
       )}
       </div>
-      {!isFriend && !isOwnProfile && !requestSent && token && (
+      {!isFriend && !isOwnProfile && !requestSent && token && friendshipStatus !== 'awaiting' &&  (
         <p className="friendText">You are not friends with this person.</p>
       )}
       {!isFriend && requestSent && token && (
         <p className="friendText">Friend request pending.</p>
       )}
-
+      {token && !isOwnProfile && friendshipStatus === 'awaiting' && (
+        <p className="friendText">This person has sent you a friend request.</p>
+      )}
+      {token && !isOwnProfile && friendshipStatus === 'awaiting' && (
+      <div className="friend-invite-actions">
+      <button className="accept-btn" onClick={acceptFriendRequest}>Accept</button>
+      <button className="reject-btn" onClick={rejectFriendRequest}>Reject</button>
+      </div>
+      )}
+      {!token && !isOwnProfile && (
+        <p className="friendText">Log in to send a friend request.</p>
+      )}
       <h3>Bio</h3>
       <textarea 
       className='bio'
