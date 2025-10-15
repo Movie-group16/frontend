@@ -10,6 +10,8 @@ import movieVideos from './movieVideos'
 import reviewShowcase from './reviewShowcase';
 import similiarMovies from './similiarMovies';
 import MoviePics from './moviePics';
+import ratingToStars from './ratingToStars';
+import movieCredits from './movieCredits';
 
 function MovieScreen( {token} ) {
     
@@ -93,33 +95,37 @@ function MovieScreen( {token} ) {
   const additionalInfo = () => {
     return (
     <div className='additional-info'>
-      <p>Release Date: {movieDetails.release_date}</p>
-      <p>Rating: {getApproximatedRating(movieDetails.vote_average)} / 10</p>
+      <p className='tagline'>"{movieDetails.tagline}"</p>
+      <div className='rating'>{ratingToStars(getApproximatedRating(movieDetails.vote_average))}</div>
+      <span id='separator'/>
       <p>Runtime: {movieDetails.runtime} minutes</p>
+      <p>Release Date: {movieDetails.release_date}</p>
       <p>Budget: {getMoneyInReadableFormat(movieDetails.budget)}</p>
       <p>Revenue: {getMoneyInReadableFormat(movieDetails.revenue)}</p>
-      <p>Tagline: {movieDetails.tagline}</p>
       <span>Status: {movieDetails.status}</span>
       <span id='status separator'> | </span>
       <span>Adult: {movieDetails.adult ? 'Yes' : 'No'}</span>
+      
       <div className="homepage-link">
         {movieDetails.homepage && (
           <a href={movieDetails.homepage} target="_blank" rel="noopener noreferrer">
             Official Website
             </a>
           )}
+      </div>
+      <span id='separator' />
+      {movieCredits(movieId)}
+      <div className="production-companies">
+        <p>Production Companies:</p>
+        <div className="production-companies-list">
+          {movieDetails.production_companies && movieDetails.production_companies.map(company => (
+            <div key={company.id} className="production-company">
+              {company.logo_path ? <img className="company-logo" src={`https://image.tmdb.org/t/p/w200${company.logo_path}`} alt={company.name} /> 
+              : <div className="no-logo-available">{company.name}</div>}
+              </div>
+            ))}
           </div>
-          <div className="production-companies">
-            <p>Production Companies:</p>
-            <div className="production-companies-list">
-              {movieDetails.production_companies && movieDetails.production_companies.map(company => (
-                <div key={company.id} className="production-company">
-                  {company.logo_path ? <img className="company-logo" src={`https://image.tmdb.org/t/p/w200${company.logo_path}`} alt={company.name} /> 
-                  : <div className="no-logo-available">{company.name}</div>}
-                  </div>
-                ))}
-            </div>
-          </div>
+        </div>
       </div>
     )
   }

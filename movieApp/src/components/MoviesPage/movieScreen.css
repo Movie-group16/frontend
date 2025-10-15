@@ -113,6 +113,19 @@
     margin: 0.2em 0;
 }
 
+.additional-info .rating {
+    font-size: large;
+    color: #ffb555;
+}
+.additional-info .tagline {
+    font-size: large;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-style: italic;
+}
+.additional-info span .separator{
+    margin: 1em;
+}
+
 .review-input {
 
     padding: 0em 0em 8em 0em;
