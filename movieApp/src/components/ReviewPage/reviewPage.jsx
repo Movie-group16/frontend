@@ -18,6 +18,8 @@ const UserReviews = () => {
     const [editedRating, setEditedRating] = useState(0);
     const [loading, setLoading] = useState(false);
     const [editedTitle, setEditedTitle] = useState("");
+    const currentUserId = localStorage.getItem("userId");
+    const isOwnProfile = parseInt(currentUserId) === parseInt(userId)
 
 
   useEffect(() => {
@@ -103,15 +105,17 @@ const UserReviews = () => {
   };
 
 
-  const renderStars = () => (
+  const renderStars = (ratingValue, readOnly = false, onChange) => (
     <div className="star-edit-container">
       {[1, 2, 3, 4, 5].map((star) => (
         <span
         key={star}
         className="star-icon"
-        onClick={() => setEditedRating(star)}
+        onClick={() => {
+          if (!readOnly && onChange) onChange(star);
+        }}
         >
-          {star <= editedRating ? <FaStar color="gold" /> : <FaRegStar color="gray" />}
+          {star <= ratingValue ? <FaStar color="gold" /> : <FaRegStar color="gray" />}
         </span>
       ))}
     </div>
@@ -130,7 +134,13 @@ const UserReviews = () => {
                     <div 
                       className="reviewCard" 
                       key={review.id}
-                      onClick={() => openEdit(review)}
+                      onClick={() => {
+                        if (isOwnProfile) {
+                          openEdit(review);
+                        } else {
+                          setSelectedReview(review);
+                        }
+                      }}
                     >
                       <div className="movie-poster-container">
                         {movie.poster_path ? (
@@ -178,25 +188,37 @@ const UserReviews = () => {
                 </p>
                 <strong>Title</strong>
                 <textarea 
-                value={editedTitle}
-                onChange={(e) => setEditedTitle(e.target.value)}
+                value={editedTitle || selectedReview.review_title}
+                onChange={(e) => isOwnProfile && setEditedTitle(e.target.value)}
                 rows={1}
+                disabled={!isOwnProfile}
                 />
                 <strong>Review Text</strong>
                 <textarea
-                  value={editedText}
-                  onChange={(e) => setEditedText(e.target.value)}
+                  value={editedText || selectedReview.review_text}
+                  onChange={(e) => isOwnProfile && setEditedText(e.target.value)}
                   rows={5}
+                  disabled={!isOwnProfile}
                 />
-
                 <div className="rating-selector">
                   <label>Rating:</label>
-                  {renderStars()}
+                  {isOwnProfile
+                    ? renderStars(editedRating, false, setEditedRating)  // editable for owner
+                    : renderStars(selectedReview.rating, true)          // read-only for others
+                  }
                 </div>
+
+                {isOwnProfile && (
                 <div className="popup-buttons">
                   <button onClick={saveEdit}>Save</button>
                   <button onClick={closeEdit}>Cancel</button>
                 </div>
+              )}
+              {!isOwnProfile && (
+                <div className="popup-buttons">
+                  <button onClick={closeEdit}>Close</button>
+                </div>
+              )}
               </div>
             </div>
           )}
