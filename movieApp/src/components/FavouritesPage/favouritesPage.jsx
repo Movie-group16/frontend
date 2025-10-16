@@ -11,6 +11,8 @@ function FavouritesPage() {
   const tmdbApiKey = import.meta.env.VITE_TMDB_API_KEY
   const backendUrl = 'http://localhost:3001'
   const navigate = useNavigate()
+  const currentUserId = localStorage.getItem("userId");
+  const isOwnProfile = parseInt(currentUserId) === parseInt(userId)
 
   useEffect(() => {
     const fetchFavourites = async () => {
@@ -84,12 +86,14 @@ function FavouritesPage() {
                   >
                     {movie.title}
                   </span>
+                  { isOwnProfile && (
                   <button 
                     className='remove-btn' 
                     onClick={() => removeFavourite(movie.id)}
                   >
                     Remove
                   </button>
+                )}
                 </div>
               </div>
             </li>
