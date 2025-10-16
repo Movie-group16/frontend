@@ -5,6 +5,7 @@ import { useState, useRef } from 'react'
 import ReactPaginate from 'react-paginate'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import ratingToStars from './ratingToStars'
 
 function MoviesPage() {
 
@@ -32,7 +33,7 @@ function MoviesPage() {
   const getCurrentPage = () => {return currentPage > 0 ? currentPage : 1}
 
   const movieSearchUrl = `https://api.themoviedb.org/3/search/movie?query=${currentSearchTerm}&include_adult=false&language=en-US&primary_release_year=${primaryReleaseYear}&page=${getCurrentPage()}`
-  const movieDiscoverUrl = `https://api.themoviedb.org/3/discover/movie?&include_adult=false&include_video=false&language=en-USpage=${getCurrentPage()}&sort_by=popularity.desc`
+  const movieDiscoverUrl = `https://api.themoviedb.org/3/discover/movie?&include_adult=false&include_video=false&language=en-USpage=${getCurrentPage()}&sort_by=popularity.desc&with_keywords=${currentSearchTerm}`
   const popularUrl = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${getCurrentPage()}`
   const topRatedUrl = `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${getCurrentPage()}`
   const nowPlayingUrl = `https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${getCurrentPage()}`
@@ -151,7 +152,7 @@ function MoviesPage() {
                   }
                 </div>
               </div>
-              <p className="movie-vote">Rating: {getApproximatedRating(item.vote_average)} / 10</p>
+              <p className="movie-vote">Rating: {ratingToStars(getApproximatedRating(item.vote_average))}</p>
               <p className="movie-release-date">Release date: {item.release_date}</p>
               </button>
             ))}
