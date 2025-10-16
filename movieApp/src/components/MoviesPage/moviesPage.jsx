@@ -152,7 +152,7 @@ function MoviesPage() {
                   }
                 </div>
               </div>
-              <p className="movie-vote">Rating: {ratingToStars(getApproximatedRating(item.vote_average))}</p>
+              <div className="movie-vote">Rating: {ratingToStars(getApproximatedRating(item.vote_average))}</div>
               <p className="movie-release-date">Release date: {item.release_date}</p>
               </button>
             ))}
